@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.tec.pay.android">
+
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <application>
+    <activity
+      android:name=".presentation.TecPayActivity"
+      android:launchMode="singleInstance"
+      android:screenOrientation="portrait"
+      android:theme="@style/TecTheme.Dialog" />
+  </application>
+
+</manifest>

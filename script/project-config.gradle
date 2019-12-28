@@ -1,0 +1,29 @@
+def gitShortRev() {
+    def gitCommit = ""
+    def proc = "git rev-parse --short HEAD".execute()
+    proc.in.eachLine { line -> gitCommit = line }
+    proc.err.eachLine { line -> println line }
+    proc.waitFor()
+    return gitCommit
+}
+ext.IS_DEV_EVN = "debug" == VARIANT.toLowerCase()
+ext.IS_TEST_EVN = "release" == VARIANT.toLowerCase()
+ext.IS_ONLINE_EVN = "official" == VARIANT.toLowerCase()
+
+switch (FLAVOR) {
+    case "tecPay":
+        ext.VERSION_NAME = "0.1.0"
+        ext.VERSION_CODE = 1
+        switch (VARIANT.toLowerCase()) {
+            case "debug":
+                ext.VERSION_NAME = ext.VERSION_NAME + "-${gitShortRev()}-TEST"
+                break
+            case "release":
+                ext.VERSION_NAME = ext.VERSION_NAME + "-${gitShortRev()}-TEST"
+                break
+            case "official":
+                ext.BINTRAY_REPO = ""
+                break
+        }
+        break
+}

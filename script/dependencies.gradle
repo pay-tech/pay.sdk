@@ -1,0 +1,46 @@
+// Dependencies
+// @see https://docs.gradle.org/current/javadoc/org/gradle/api/artifacts/dsl/DependencyHandler.html
+
+ext {
+    versions = [
+            android_support         : '28.0.0',
+            androidMinSdkVersion    : 16,
+            androidTargetSdkVersion : 28,
+            androidBuildToolsVersion: '28.0.3',
+            java                    : JavaVersion.VERSION_1_8,
+            okhttp                  : '3.12.3',
+            gson                    : '2.8.5',
+            shadow                  : '1.0.0',
+    ]
+
+    libraries = [
+            android_support_v4: "com.android.support:support-v4:${versions.android_support}",
+            okhttp            : "com.squareup.okhttp3:okhttp:${versions.okhttp}",
+            gson              : "com.google.code.gson:gson:${versions.gson}",
+    ]
+}
+
+def test = [:]
+versions.junit = '4.12'
+versions.robolectric = '3.8'
+versions.powermock = '1.7.4'
+versions.mockito = '2.+'
+versions.mockito_all = "1.10.19"
+versions.android_test = '0.5'
+versions.mockwebserver = "3.8.1"
+versions.espresso = "3.0.1"
+versions.robolectric = '3.8'
+versions.powermock = '1.7.4'
+test.junit = "junit:junit:${versions.junit}"
+test.mockwebserver = "com.squareup.okhttp3:mockwebserver:$versions.mockwebserver"
+test.mockito_all = "org.mockito:mockito-all:$versions.mockito_all"
+test.espresso_core = "com.android.support.test.espresso:espresso-core:$versions.espresso"
+test.espresso_contrib = "com.android.support.test.espresso:espresso-contrib:$versions.espresso"
+test.runner = "com.android.support.test:runner:${versions.android_test}"
+test.mockito_core = "org.mockito:mockito-core:$versions.mockito"
+test.powermock_junit4 = "org.powermock:powermock-module-junit4:${versions.powermock}"
+test.powermock_junit4_rule = "org.powermock:powermock-module-junit4-rule:${versions.powermock}"
+test.powermock_api_mockito = "org.powermock:powermock-api-mockito2:${versions.powermock}"
+test.powermock_classloading = "org.powermock:powermock-classloading-xstream:${versions.powermock}"
+test.robolectric = "org.robolectric:robolectric:${versions.robolectric}"
+libraries.test = test

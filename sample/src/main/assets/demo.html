@@ -1,0 +1,180 @@
+<html lang="en">
+<head>
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+          integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+          crossorigin="anonymous"></script>
+  <meta content="text/html; charset=utf-8" http-equiv="content-type">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>
+    Tec-Pay
+  </title>
+
+</head>
+
+<body>
+
+<!-- As a heading -->
+<nav class="navbar navbar-light bg-light">
+  <span class="navbar-brand mb-0 h1" id="navBar">Hello</span>
+</nav>
+<br>
+<div class="container">
+
+  <ul class="list-group">
+
+    <li class="list-group-item">
+      <div id="setCache">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Key" id="setCacheKey">
+          <input type="text" class="form-control" placeholder="Value" id="setCacheValue">
+          <div class="input-group-append">
+            <button type="button" id="setCacheButton"
+                    value="setCache"
+                    class="btn btn-primary"
+                    onclick='setCache(document.getElementById("setCacheKey").value,document.getElementById("setCacheValue").value)'>
+              setCache
+            </button>
+          </div>
+        </div>
+      </div>
+    </li>
+
+    <li class="list-group-item">
+      <div id="getCache" class="input-group">
+        <input type="text" class="form-control" placeholder="Key" id="getCacheKey">
+        <input type="text" class="form-control" placeholder="DefaultValue"
+               id="getCacheValue">
+        <div class="input-group-append">
+          <button type="button" id="getCacheButton"
+                  value="getCache"
+                  class="btn btn-primary"
+                  onclick='getCache(document.getElementById("getCacheKey").value,document.getElementById("getCacheValue").value)'>
+            getCache
+          </button>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div id="closeWeb">
+        <div class="input-group">
+          <div class="input-group-append">
+            <button type="button" id="closeWebButton"
+                    value="closeWeb"
+                    class="btn btn-primary"
+                    onclick='closeWeb()'>
+              close
+            </button>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <div class="fixed-bottom" id="bottomBar"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+</body>
+<script>
+    function closeWeb() {
+        window.WebViewJavascriptBridge.send(
+            {
+                'service': 'UI',
+                'action': 'close'
+            }
+            , function (responseData) {
+            }
+        );
+    }
+
+    function appendAlert(methodName, responseData) {
+        console.log("TYPE : " + typeof responseData);
+        let code = JSON.parse(responseData).code;
+        let title;
+        let now = new Date();
+        if (code === 0) {
+            title = '<div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">';
+        } else {
+            title = '<div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">';
+        }
+        let template =
+            `${title}<strong>${methodName}</strong> @${now.toLocaleTimeString()}<br>
+<pre>${responseData}</pre>
+    <button type="button" class="close" params-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>`;
+
+        $('#bottomBar').append(template);
+    }
+
+    function setCache(key, value) {
+        window.WebViewJavascriptBridge.send(
+            {
+                'service': 'cache',
+                'action': 'set',
+                'params': {
+                    'key': key,
+                    'value': value
+                }
+            }
+            , function (responseData) {
+                appendAlert("setCache", responseData, $('#setCache'));
+            }
+        );
+    }
+
+    function getCache(key, defValue) {
+        window.WebViewJavascriptBridge.send(
+            {
+                'service': 'cache',
+                'action': 'get',
+                'params': {
+                    'key': key,
+                    'defValue': defValue
+                }
+            }
+            , function (responseData) {
+                appendAlert("getCache", responseData)
+            }
+        );
+    }
+
+    function connectWebViewJavascriptBridge(callback) {
+        if (window.WebViewJavascriptBridge) {
+            callback(WebViewJavascriptBridge)
+        } else {
+            document.addEventListener(
+                'WebViewJavascriptBridgeReady'
+                , function () {
+                    callback(WebViewJavascriptBridge)
+                },
+                false
+            );
+        }
+    }
+
+    connectWebViewJavascriptBridge(function (bridge) {
+        bridge.init(null);
+    });
+
+
+    $(document).on('WebViewJavascriptBridgeReady', function () {
+       $('#navBar').text('Hello, welcome to Tec-Pay demo');
+    });
+
+
+
+</script>
+</html>

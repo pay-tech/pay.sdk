@@ -1,0 +1,2 @@
+include ':sample', ':sdk'
+rootProject.name='TecPay'
