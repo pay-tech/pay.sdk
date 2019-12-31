@@ -3,7 +3,6 @@ package com.tec.pay.android.controller;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import com.tec.pay.android.ActionCallback;
 import com.tec.pay.android.BuildConfig;
 import com.tec.pay.android.TecPayCallback;
 import com.tec.pay.android.TecPayParam;
@@ -30,7 +29,7 @@ public class TecPayController {
   private static final int STATE_RUNNING = 1;
   private static final int STATE_SUCCESS = 2;
 
-  private final Set<ActionCallback> mObservers = new HashSet<>();
+  private final Set<TecPayCallback> mObservers = new HashSet<>();
   private volatile int mCurrentState = STATE_IDLE;
   private String mAppId;
   private String mAppKey;
@@ -48,13 +47,13 @@ public class TecPayController {
   }
 
   public synchronized void init(Context context, String appId, String appKey,
-      ActionCallback callback) {
+      TecPayCallback callback) {
     try {
       Validator.notNull(context, "context");
       Validator.notEmpty(appId, "appId");
       Validator.notEmpty(appKey, "appKey");
     } catch (Exception e) {
-      callback.onFailed(e);
+      callback.onResult(TecPayResult.makeFailed(BaseConstant.CODE_ERROR_DEVELOPER, e));
       return;
     }
     if (callback != null) {
@@ -98,11 +97,11 @@ public class TecPayController {
   }
 
   private synchronized void notifyObserver(final Exception error) {
-    for (ActionCallback observer : mObservers) {
+    for (TecPayCallback observer : mObservers) {
       if (error == null) {
-        observer.onSucceed();
+        observer.onResult(TecPayResult.makeSuccess());
       } else {
-        observer.onFailed(error);
+        observer.onResult(TecPayResult.makeFailed(BaseConstant.CODE_ERROR_DEVELOPER, error));
       }
     }
     mObservers.clear();

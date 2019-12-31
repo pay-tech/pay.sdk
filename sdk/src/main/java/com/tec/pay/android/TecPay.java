@@ -22,7 +22,7 @@ public class TecPay {
     TecPayController.instance().init(context, appId, appKey, null);
   }
 
-  public static void init(Context context, String appId, String appKey, ActionCallback callback) {
+  public static void init(Context context, String appId, String appKey, TecPayCallback callback) {
     TecPayController.instance().init(context, appId, appKey, callback);
   }
 
