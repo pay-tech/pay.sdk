@@ -29,6 +29,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation libraries.android_support_v4
+    implementation files('libs/utdid4all.jar')
 }

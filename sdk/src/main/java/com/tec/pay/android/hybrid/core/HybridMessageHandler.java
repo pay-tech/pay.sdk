@@ -3,10 +3,10 @@ package com.tec.pay.android.hybrid.core;
 import android.support.annotation.NonNull;
 import com.tec.pay.android.base.log.DLog;
 import com.tec.pay.android.hybrid.HybridConstant;
+import com.tec.pay.android.hybrid.IHybridClient;
 import com.tec.pay.android.hybrid.IHybridObserver;
 import com.tec.pay.android.hybrid.model.Code;
 import com.tec.pay.android.hybrid.model.RequestBody;
-import com.tec.pay.android.hybrid.presentation.IHybridClient;
 import org.json.JSONException;
 
 

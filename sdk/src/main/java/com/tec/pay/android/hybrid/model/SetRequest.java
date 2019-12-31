@@ -1,0 +1,37 @@
+package com.tec.pay.android.hybrid.model;
+
+import android.support.annotation.NonNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+/**
+ * SetCacheRequest class.
+ *
+ * @author Lucas Cheung.
+ * @date 2019-12-27.
+ */
+public class SetRequest {
+
+  private String key;
+  private String value;
+
+  SetRequest(String key, String value) {
+    this.key = key;
+    this.value = value;
+  }
+
+  @NonNull
+  public String getKey() {
+    return key;
+  }
+
+  @NonNull
+  public String getValue() {
+    return value;
+  }
+
+
+  public static SetRequest from(@NonNull JSONObject jsonObject) throws JSONException {
+    return new SetRequest(jsonObject.getString("key"), jsonObject.getString("value"));
+  }
+}

@@ -1,12 +1,14 @@
 package com.tec.pay.android.hybrid;
 
+import com.tec.pay.android.base.data.BaseConstant;
+
 /**
  * HybridConstant class.
  *
  * @author Lucas Cheung.
  * @date 2019-12-27.
  */
-public class HybridConstant {
+public class HybridConstant extends BaseConstant {
 
   public static final String SERVICE_UI = "UI";
   public static final String SERVICE_CACHE = "cache";
@@ -20,10 +22,6 @@ public class HybridConstant {
   public static final String ACTION_DEL = "del";
   public static final String ACTION_FLUSH = "flush";
   public static final String ACTION_CALLBACK = "callback";
-
-  public static final int CODE_SUCCESS = 0;
-
-  public static final String MSG_SUCCESS = "success";
 
   private HybridConstant() {
   }

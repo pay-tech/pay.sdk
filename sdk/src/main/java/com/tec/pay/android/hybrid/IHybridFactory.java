@@ -1,7 +1,6 @@
 package com.tec.pay.android.hybrid;
 
 import android.support.annotation.NonNull;
-import com.tec.pay.android.hybrid.presentation.IHybridClient;
 
 public interface IHybridFactory {
 

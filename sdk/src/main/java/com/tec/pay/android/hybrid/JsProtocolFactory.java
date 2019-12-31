@@ -3,8 +3,8 @@ package com.tec.pay.android.hybrid;
 import com.tec.pay.android.base.utils.TextHelper;
 import com.tec.pay.android.hybrid.model.Code;
 import com.tec.pay.android.hybrid.model.ResponseBody;
-import java.util.Map;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public final class JsProtocolFactory {
 
@@ -12,7 +12,7 @@ public final class JsProtocolFactory {
     return responseSuccess(null);
   }
 
-  public static String responseSuccess(Map<String, Object> data) throws JSONException {
+  public static String responseSuccess(JSONObject data) throws JSONException {
     ResponseBody responseBody = new ResponseBody(Code.SUCCESS.getCode(), Code.SUCCESS.getMsg(),
         data);
     return responseBody.toJson();

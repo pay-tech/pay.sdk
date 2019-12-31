@@ -1,53 +1,52 @@
-package com.tec.pay.android.hybrid.presentation;
+package com.tec.pay.android.hybrid.presentation.tab;
 
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.webkit.WebResourceResponse;
-import com.tec.pay.android.base.component.ContextManager;
+import com.tec.pay.android.base.frame.MvpBasePresenter;
 import com.tec.pay.android.base.log.DLog;
 import com.tec.pay.android.base.utils.Validator;
 import com.tec.pay.android.hybrid.HybridConstant;
+import com.tec.pay.android.hybrid.IHybridClient;
 import com.tec.pay.android.hybrid.IHybridObserver;
 import com.tec.pay.android.hybrid.IHybridRouter;
 import com.tec.pay.android.hybrid.core.BridgeCallback;
 import com.tec.pay.android.hybrid.core.HybridWebView;
 import com.tec.pay.android.hybrid.data.HybridDataManager;
 import com.tec.pay.android.hybrid.model.Code;
+import com.tec.pay.android.hybrid.model.GetRequest;
 import com.tec.pay.android.hybrid.model.GetResponse;
 import com.tec.pay.android.hybrid.model.RequestBody;
-import com.tec.pay.android.hybrid.model.cache.GetCacheRequest;
-import com.tec.pay.android.hybrid.model.cache.SetCacheRequest;
+import com.tec.pay.android.hybrid.model.SetCacheRequest;
+import com.tec.pay.android.hybrid.presentation.main.TecPayPresenter;
 import com.tec.pay.android.task.Task;
 import java.util.Collections;
 import java.util.Map;
 import org.json.JSONObject;
 
 /**
- * HybridWebViewModel class.
+ * HybridWebPresenter class.
  *
  * @author Lucas Cheung.
  * @date 2019-12-27.
  */
-public class HybridWebViewModel implements IHybridClient, IHybridRouter, IHybridObserver {
+public class HybridWebPresenter extends MvpBasePresenter<ITabView> implements IHybridClient,
+    IHybridRouter, IHybridObserver {
 
   private HybridDataManager mHybridDataManager;
+  private TecPayPresenter mParent;
 
-  public HybridWebViewModel(HybridDataManager hybridDataManager) {
+  HybridWebPresenter(HybridDataManager hybridDataManager) {
     mHybridDataManager = hybridDataManager;
+  }
+
+  public void attachParent(TecPayPresenter presenter) {
+    mParent = presenter;
   }
 
   @Override
   public void onUiMessage(HybridWebView view, RequestBody requestBody, BridgeCallback function) {
-    switch (requestBody.getAction()) {
-      case HybridConstant.ACTION_CLOSE:
-        if (ContextManager.activity() != null) {
-          ContextManager.activity().finish();
-        }
-        break;
-      case HybridConstant.ACTION_SET_TITLE:
-        break;
-      default:
-    }
+    sendMessageToParent(view, requestBody, function);
   }
 
   @Override
@@ -58,9 +57,9 @@ public class HybridWebViewModel implements IHybridClient, IHybridRouter, IHybrid
         Task.forResult(requestBody.getParams()).continueWith(task -> {
           JSONObject params = task.getResult();
           Validator.notNull(params, "params");
-          return GetCacheRequest.from(params);
+          return GetRequest.from(params);
         }, Task.BACKGROUND_EXECUTOR).onSuccessTask(task -> {
-          GetCacheRequest result = task.getResult();
+          GetRequest result = task.getResult();
           return mHybridDataManager.getCache(result.getKey(), result.getDefValue());
         }).continueWith(task -> {
           if (task.isFaulted()) {
@@ -130,18 +129,32 @@ public class HybridWebViewModel implements IHybridClient, IHybridRouter, IHybrid
   public void onInfoMessage(HybridWebView view, RequestBody requestBody, BridgeCallback function) {
     switch (requestBody.getAction()) {
       case HybridConstant.ACTION_GET:
+        Task.forResult(requestBody.getParams()).continueWith(task -> {
+          JSONObject params = task.getResult();
+          Validator.notNull(params, "params");
+          return GetRequest.from(params);
+        }, Task.BACKGROUND_EXECUTOR).onSuccessTask(task -> {
+          GetRequest result = task.getResult();
+          return mHybridDataManager.getInfo(result.getKey(), result.getDefValue());
+        }).continueWith(task -> {
+          if (task.isFaulted()) {
+            Exception error = task.getError();
+            function.onError(error, Code.ERROR_DEVELOPER);
+          } else {
+            GetResponse result = task.getResult();
+            function.onSuccess(Collections.singletonMap(result.key, result.value));
+          }
+          return null;
+        }, Task.UI_THREAD_EXECUTOR);
         break;
       default:
+        function.onError(Code.ERROR_ACTION_NOT_BE_SUPPORT);
     }
   }
 
   @Override
   public void onBizMessage(HybridWebView view, RequestBody requestBody, BridgeCallback function) {
-    switch (requestBody.getAction()) {
-      case HybridConstant.ACTION_CALLBACK:
-        break;
-      default:
-    }
+    sendMessageToParent(view, requestBody, function);
   }
 
   @Override
@@ -172,7 +185,6 @@ public class HybridWebViewModel implements IHybridClient, IHybridRouter, IHybrid
 
   @Override
   public void onUpdateTitle(HybridWebView view, String title) {
-
   }
 
   @Override
@@ -196,11 +208,26 @@ public class HybridWebViewModel implements IHybridClient, IHybridRouter, IHybrid
 
   @Override
   public void onCloseWindow(HybridWebView view) {
-
   }
 
   @Override
   public void onCloseClient() {
+  }
 
+  private void sendMessageToParent(HybridWebView view, RequestBody requestBody,
+      BridgeCallback function) {
+    mParent.handleMessage(view, requestBody).continueWith(task -> {
+      if (task.isFaulted()) {
+        Exception error = task.getError();
+        function.onError(error, Code.ERROR_DEVELOPER);
+      } else {
+        if (task.getResult()) {
+          function.onSuccess();
+        } else {
+          function.onError(Code.ERROR_ACTION_NOT_BE_SUPPORT);
+        }
+      }
+      return null;
+    }, Task.UI_THREAD_EXECUTOR);
   }
 }

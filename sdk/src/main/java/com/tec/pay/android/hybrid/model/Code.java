@@ -1,5 +1,6 @@
 package com.tec.pay.android.hybrid.model;
 
+import com.tec.pay.android.base.data.BaseConstant;
 import com.tec.pay.android.hybrid.HybridConstant;
 
 public enum Code {
@@ -8,7 +9,7 @@ public enum Code {
   ERROR_EMPTY_PARAM("param can not be empty", -2),
   ERROR_ACTION_NOT_BE_SUPPORT("action not be support", -21),
   ERROR_JSON_PARSE("json parse error", -10),
-  ERROR_DEVELOPER("developer error", -11);
+  ERROR_DEVELOPER(BaseConstant.MSG_ERROR_DEVELOPER, BaseConstant.CODE_ERROR_DEVELOPER);
 
   private String msg;
   private int code;

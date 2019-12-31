@@ -9,8 +9,8 @@ import android.text.TextUtils;
 import android.webkit.DownloadListener;
 import android.webkit.URLUtil;
 import com.tec.pay.android.base.log.DLog;
+import com.tec.pay.android.hybrid.IHybridClient;
 import com.tec.pay.android.hybrid.IHybridFactory;
-import com.tec.pay.android.hybrid.presentation.IHybridClient;
 
 public class HybridWebViewCore extends BridgeWebView {
 

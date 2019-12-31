@@ -2,7 +2,6 @@ package com.tec.pay.android.hybrid;
 
 import android.os.Message;
 import com.tec.pay.android.hybrid.core.HybridWebView;
-import com.tec.pay.android.hybrid.presentation.IHybridClient;
 
 /**
  * HybridClientImpl class.

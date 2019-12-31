@@ -4,16 +4,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Button;
+import com.google.gson.Gson;
 import com.tec.pay.android.TecPay;
+import com.tec.pay.android.TecPayParam;
 import com.tec.pay.android.hybrid.core.BridgeWebView;
 import com.tec.pay.android.hybrid.core.DefaultHandler;
-import com.tec.pay.android.presentation.TecPayActivity;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -68,8 +70,7 @@ public class MainActivity extends Activity implements OnClickListener {
       }
     });
 
-//    webView.loadUrl("file:///android_asset/demo.html");
-    TecPay.init(getApplicationContext(), null, null);
+    TecPay.init(getApplicationContext(), "a", "a");
   }
 
   public void pickFile() {
@@ -102,7 +103,9 @@ public class MainActivity extends Activity implements OnClickListener {
   @Override
   public void onClick(View v) {
     if (button.equals(v)) {
-      TecPayActivity.show(this, "file:///android_asset/demo.html");
+      TecPay.pay(TecPayParam.newBuilder().build(), result -> {
+        Log.d("PayCallback", new Gson().toJson(result));
+      });
     }
 
   }

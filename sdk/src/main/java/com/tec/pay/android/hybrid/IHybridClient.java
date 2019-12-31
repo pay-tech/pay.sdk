@@ -1,4 +1,4 @@
-package com.tec.pay.android.hybrid.presentation;
+package com.tec.pay.android.hybrid;
 
 import android.os.Message;
 import com.tec.pay.android.hybrid.core.HybridWebView;

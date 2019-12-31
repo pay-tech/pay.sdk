@@ -59,20 +59,96 @@
       </div>
     </li>
     <li class="list-group-item">
+      <div id="delCache" class="input-group">
+        <input type="text" class="form-control" placeholder="Key" id="delCacheKey">
+        <div class="input-group-append">
+          <button type="button" id="delCacheButton"
+                  value="delCache"
+                  class="btn btn-primary"
+                  onclick='delCache(document.getElementById("delCacheKey").value)'>
+            delCache
+          </button>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div id="flushCache">
+        <div class="input-group">
+          <button type="button" id="flushCacheButton"
+                  value="flushCache"
+                  class="btn btn-primary"
+                  onclick='flushCache()'>
+            flushCache
+          </button>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
       <div id="closeWeb">
         <div class="input-group">
-          <div class="input-group-append">
-            <button type="button" id="closeWebButton"
-                    value="closeWeb"
-                    class="btn btn-primary"
-                    onclick='closeWeb()'>
-              close
-            </button>
-          </div>
+          <button type="button" id="closeWebButton"
+                  value="closeWeb"
+                  class="btn btn-primary"
+                  onclick='closeWeb()'>
+            close
+          </button>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div id="setTitle" class="input-group">
+        <input type="text" class="form-control" placeholder="title" id="setTitleKey">
+        <div class="input-group-append">
+          <button type="button" id="setTitleButton"
+                  value="setTitle"
+                  class="btn btn-primary"
+                  onclick='setTitle(document.getElementById("setTitleKey").value)'>
+            setTitle
+          </button>
         </div>
       </div>
     </li>
   </ul>
+  <li class="list-group-item">
+    <div id="getInfo" class="input-group">
+      <input type="text" class="form-control" placeholder="Key" id="getInfoKey">
+      <input type="text" class="form-control" placeholder="DefaultValue"
+             id="getInfoValue">
+      <div class="input-group-append">
+        <button type="button" id="getInfoButton"
+                value="getInfo"
+                class="btn btn-primary"
+                onclick='getInfo(document.getElementById("getInfoKey").value,document.getElementById("getInfoValue").value)'>
+          getInfo
+        </button>
+      </div>
+    </div>
+  </li>
+
+  <li class="list-group-item">
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="code" id="code">
+      <input type="text" class="form-control" placeholder="msg" id="msg">
+    </div>
+    <div class="input-group">
+      <input type="number" class="form-control" placeholder="amount" id="amount">
+      <input type="text" class="form-control" placeholder="currency" id="currency">
+      <input type="text" class="form-control" placeholder="orderId" id="orderId">
+      <input type="text" class="form-control" placeholder="passBack" id="passBack">
+    </div>
+    <button type="button" id="sendPayCallbackButton"
+            value="sendPayCallback"
+            class="btn btn-primary"
+            onclick='sendPayCallback(
+				document.getElementById("code").value,
+				document.getElementById("msg").value,
+				document.getElementById("amount").value,
+				document.getElementById("currency").value),
+				document.getElementById("orderId").value),
+				document.getElementById("passBack").value)'>
+      sendPayCallback
+    </button>
+  </li>
   <div class="fixed-bottom" id="bottomBar"></div>
 </div>
 
@@ -118,6 +194,92 @@
 
         $('#bottomBar').append(template);
     }
+	
+	$(".fixed-bottom").on("click",".close",function(){
+		$(this).parents(".alert").remove()
+	})
+	
+	function sendPayCallback(code, msg, amount, currency, orderId, passBack) {
+	    window.WebViewJavascriptBridge.send(
+	        {
+	            'service': 'biz',
+	            'action': 'callback',
+	            'params': {
+	                'code': code,
+	                'msg': msg,
+					'data': {
+						'amount': amount,
+						'currency': currency,
+						'orderId': orderId,
+						'passBack': passBack
+					}
+	            }
+	        }
+	        , function (responseData) {
+	            appendAlert("sendPayCallback", responseData)
+	        }
+	    );
+	}
+	
+	function getInfo(key, defValue) {
+	    window.WebViewJavascriptBridge.send(
+	        {
+	            'service': 'info',
+	            'action': 'get',
+	            'params': {
+	                'key': key,
+	                'defValue': defValue
+	            }
+	        }
+	        , function (responseData) {
+	            appendAlert("getInfo", responseData)
+	        }
+	    );
+	}
+	
+	function setTitle(title) {
+	    window.WebViewJavascriptBridge.send(
+	        {
+	            'service': 'UI',
+	            'action': 'setTitle',
+	            'params': {
+	                'title': title,
+	            }
+	        }
+	        , function (responseData) {
+	            appendAlert("setTitle", responseData)
+	        }
+	    );
+	}
+	
+	function flushCache() {
+	    window.WebViewJavascriptBridge.send(
+	        {
+	            'service': 'cache',
+	            'action': 'flush',
+
+	        }
+	        , function (responseData) {
+	            appendAlert("flushCache", responseData)
+	        }
+	    );
+	}
+	
+	function delCache(key) {
+	    window.WebViewJavascriptBridge.send(
+	        {
+	            'service': 'cache',
+	            'action': 'del',
+	            'params': {
+	                'key': key,
+	            }
+	        }
+	        , function (responseData) {
+	            appendAlert("delCache", responseData)
+	        }
+	    );
+	}
+
 
     function setCache(key, value) {
         window.WebViewJavascriptBridge.send(
@@ -173,8 +335,5 @@
     $(document).on('WebViewJavascriptBridgeReady', function () {
        $('#navBar').text('Hello, welcome to Tec-Pay demo');
     });
-
-
-
 </script>
 </html>

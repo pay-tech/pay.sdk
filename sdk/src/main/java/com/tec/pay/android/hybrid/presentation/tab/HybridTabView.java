@@ -1,4 +1,4 @@
-package com.tec.pay.android.hybrid.presentation;
+package com.tec.pay.android.hybrid.presentation.tab;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -6,12 +6,14 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import com.tec.pay.android.base.utils.NetUtils;
+import com.tec.pay.android.hybrid.IHybridClient;
 import com.tec.pay.android.hybrid.IHybridFactory;
 import com.tec.pay.android.hybrid.IHybridObserver;
 import com.tec.pay.android.hybrid.IHybridRouter;
 import com.tec.pay.android.hybrid.WebViewPool;
 import com.tec.pay.android.hybrid.core.HybridWebView;
 import com.tec.pay.android.hybrid.data.HybridDataManager;
+import com.tec.pay.android.hybrid.presentation.main.TecPayPresenter;
 
 /**
  * HybridTabView class.
@@ -19,10 +21,12 @@ import com.tec.pay.android.hybrid.data.HybridDataManager;
  * @author Lucas Cheung.
  * @date 2019-12-27.
  */
-public class HybridTabView extends FrameLayout {
+public class HybridTabView extends FrameLayout implements ITabView {
+
+  private static final String ERROR_URL = "about:blank";
 
   private HybridWebView mHybridWebView;
-  private HybridWebViewModel mViewModel;
+  private HybridWebPresenter mPresenter;
 
   public HybridTabView(@NonNull Context context) {
     this(context, null);
@@ -40,31 +44,35 @@ public class HybridTabView extends FrameLayout {
   }
 
   private void init(Context context) {
-    mViewModel = new HybridWebViewModel(HybridDataManager.instance());
+    mPresenter = new HybridWebPresenter(HybridDataManager.instance());
     mHybridWebView = WebViewPool.getInstance().acquireWebView(context, new IHybridFactory() {
       @NonNull
       @Override
       public IHybridClient client() {
-        return getViewModel();
+        return getPresenter();
       }
 
       @NonNull
       @Override
       public IHybridObserver observer() {
-        return getViewModel();
+        return getPresenter();
       }
 
       @NonNull
       @Override
       public IHybridRouter router() {
-        return getViewModel();
+        return getPresenter();
       }
     });
     addView(mHybridWebView, 0);
   }
 
-  HybridWebViewModel getViewModel() {
-    return mViewModel;
+  public void attachParentPresenter(TecPayPresenter presenter) {
+    mPresenter.attachParent(presenter);
+  }
+
+  HybridWebPresenter getPresenter() {
+    return mPresenter;
   }
 
   public void loadUri(String url) {
@@ -77,5 +85,25 @@ public class HybridTabView extends FrameLayout {
 
   private void showErrorView(int code, String msg) {
 
+  }
+
+  @Override
+  protected void onAttachedToWindow() {
+    super.onAttachedToWindow();
+    mPresenter.attachView(this);
+  }
+
+  @Override
+  protected void onDetachedFromWindow() {
+    super.onDetachedFromWindow();
+    mPresenter.detachView();
+  }
+
+  public void destroy() {
+    mPresenter.destroy();
+  }
+
+  public boolean goBack() {
+    return mHybridWebView.goBack(ERROR_URL);
   }
 }

@@ -1,4 +1,4 @@
-package com.tec.pay.android.hybrid.model.cache;
+package com.tec.pay.android.hybrid.model;
 
 import android.support.annotation.NonNull;
 import org.json.JSONException;
@@ -10,26 +10,13 @@ import org.json.JSONObject;
  * @author Lucas Cheung.
  * @date 2019-12-27.
  */
-public class SetCacheRequest {
+public class SetCacheRequest extends SetRequest {
 
-  private String key;
-  private String value;
   private long expiredTime;
 
   private SetCacheRequest(String key, String value, long expiredTime) {
-    this.key = key;
-    this.value = value;
+    super(key, value);
     this.expiredTime = expiredTime;
-  }
-
-  @NonNull
-  public String getKey() {
-    return key;
-  }
-
-  @NonNull
-  public String getValue() {
-    return value;
   }
 
   public long getExpiredTime() {

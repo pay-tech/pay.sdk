@@ -1,4 +1,4 @@
-package com.tec.pay.android.hybrid.model.cache;
+package com.tec.pay.android.hybrid.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,12 +11,12 @@ import org.json.JSONObject;
  * @author Lucas Cheung.
  * @date 2019-12-27.
  */
-public class GetCacheRequest {
+public class GetRequest {
 
   private String key;
   private String defValue;
 
-  private GetCacheRequest(String key, String defValue) {
+  private GetRequest(String key, String defValue) {
     this.key = key;
     this.defValue = defValue;
   }
@@ -31,7 +31,7 @@ public class GetCacheRequest {
     return defValue;
   }
 
-  public static GetCacheRequest from(@NonNull JSONObject jsonObject) throws JSONException {
-    return new GetCacheRequest(jsonObject.getString("key"), jsonObject.optString("defValue"));
+  public static GetRequest from(@NonNull JSONObject jsonObject) throws JSONException {
+    return new GetRequest(jsonObject.getString("key"), jsonObject.optString("defValue"));
   }
 }

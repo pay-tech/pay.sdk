@@ -621,21 +621,11 @@ public class DLog {
     }
 
     /**
-     * Return whether a message at {@code priority} should be logged.
-     *
-     * @deprecated use {@link #isLoggable(String, int)} instead.
-     */
-    @Deprecated
-    protected boolean isLoggable(int priority) {
-      return true;
-    }
-
-    /**
      * Return whether a message at {@code priority} or {@code tag} should be logged.
      */
     protected boolean isLoggable(@Nullable String tag, int priority) {
       //noinspection deprecation
-      return isLoggable(priority);
+      return true;
     }
 
     private void prepareLog(int priority, Throwable t, String message, Object... args) {

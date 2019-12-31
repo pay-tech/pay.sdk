@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.tec.pay.android.base.component.ContextManager;
 import com.tec.pay.android.hybrid.data.local.HybridLocalData;
+import com.tec.pay.android.hybrid.data.local.SdkData;
 import com.tec.pay.android.hybrid.model.GetResponse;
 import com.tec.pay.android.task.Task;
 
@@ -17,17 +18,14 @@ public class HybridDataManager implements IHybridDataSource {
 
   private HybridLocalData mHybridLocalData;
 
-  private static volatile HybridDataManager INSTANCE;
-
-  public HybridDataManager init(String appKey) {
-
-    return INSTANCE;
+  public HybridDataManager init(String appId, String appKey) {
+    SdkData.instance().saveAppKey(appKey);
+    return this;
   }
 
   public static HybridDataManager instance() {
     return InstanceHolder.INSTANCE;
   }
-
 
   private static class InstanceHolder {
 
@@ -61,5 +59,10 @@ public class HybridDataManager implements IHybridDataSource {
   @Override
   public Task<Void> flushCache() {
     return mHybridLocalData.flushCache();
+  }
+
+  @Override
+  public Task<GetResponse> getInfo(@NonNull String key, @Nullable String defaultValue) {
+    return mHybridLocalData.getInfo(key, defaultValue);
   }
 }

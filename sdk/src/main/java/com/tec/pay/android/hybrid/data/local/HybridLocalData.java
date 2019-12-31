@@ -7,15 +7,23 @@ import com.tec.pay.android.base.data.Pref;
 import com.tec.pay.android.hybrid.data.IHybridDataSource;
 import com.tec.pay.android.hybrid.model.GetResponse;
 import com.tec.pay.android.task.Task;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HybridLocalData implements IHybridDataSource {
 
   public static final String PREF_PAY_CACHE = "TEC%PAY_CACHE";
 
   private Pref mPayCache;
+  private Map<String, Object> mInfoData = new HashMap<>();
 
   public HybridLocalData(Context context) {
     mPayCache = new Pref(context, PREF_PAY_CACHE);
+    mInfoData.putAll(AppData.getAppInfo());
+    mInfoData.putAll(AppData.getSDKInfo());
+    mInfoData.putAll(DeviceData.getDeviceInfo());
+    mInfoData.putAll(DeviceData.getNetworkInfo());
+    mInfoData.putAll(DeviceData.getSystemInfo());
   }
 
   @Override
@@ -52,6 +60,20 @@ public class HybridLocalData implements IHybridDataSource {
     return Task.call(() -> {
       mPayCache.clear();
       return null;
+    });
+  }
+
+  @Override
+  public Task<GetResponse> getInfo(@NonNull String key, @Nullable String defaultValue) {
+    return Task.call(() -> {
+      String value;
+      Object o = mInfoData.get(key);
+      if (o == null) {
+        value = defaultValue;
+      } else {
+        value = o.toString();
+      }
+      return new GetResponse(key, value);
     });
   }
 }

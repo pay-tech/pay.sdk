@@ -2,9 +2,11 @@ package com.tec.pay.android.hybrid.core;
 
 import android.support.annotation.NonNull;
 import com.tec.pay.android.base.log.DLog;
+import com.tec.pay.android.base.utils.JsonUtils;
+import com.tec.pay.android.hybrid.IHybridClient;
 import com.tec.pay.android.hybrid.JsProtocolFactory;
 import com.tec.pay.android.hybrid.model.Code;
-import com.tec.pay.android.hybrid.presentation.IHybridClient;
+import java.util.Collections;
 import java.util.Map;
 import org.json.JSONException;
 
@@ -28,13 +30,13 @@ public class BridgeCallback {
   }
 
   public void onSuccess() {
-    onSuccess(null);
+    onSuccess(Collections.emptyMap());
   }
 
-  public void onSuccess(Map<String, Object> data) {
+  public void onSuccess(@NonNull Map<String, Object> data) {
     Code code;
     try {
-      String json = JsProtocolFactory.responseSuccess(data);
+      String json = JsProtocolFactory.responseSuccess(JsonUtils.toJSONObject(data));
       callBack.onCallBack(json);
       code = Code.SUCCESS;
     } catch (JSONException e) {

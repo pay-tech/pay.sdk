@@ -22,4 +22,6 @@ public interface IHybridDataSource {
   Task<Void> delCache(@NonNull final String key);
 
   Task<Void> flushCache();
+
+  Task<GetResponse> getInfo(@NonNull String key, @Nullable String defaultValue);
 }
