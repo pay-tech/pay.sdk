@@ -108,47 +108,47 @@
         </div>
       </div>
     </li>
-  </ul>
-  <li class="list-group-item">
-    <div id="getInfo" class="input-group">
-      <input type="text" class="form-control" placeholder="Key" id="getInfoKey">
-      <input type="text" class="form-control" placeholder="DefaultValue"
-             id="getInfoValue">
-      <div class="input-group-append">
-        <button type="button" id="getInfoButton"
-                value="getInfo"
-                class="btn btn-primary"
-                onclick='getInfo(document.getElementById("getInfoKey").value,document.getElementById("getInfoValue").value)'>
-          getInfo
-        </button>
+    <li class="list-group-item">
+      <div id="getInfo" class="input-group">
+        <input type="text" class="form-control" placeholder="Key" id="getInfoKey">
+        <input type="text" class="form-control" placeholder="DefaultValue"
+               id="getInfoValue">
+        <div class="input-group-append">
+          <button type="button" id="getInfoButton"
+                  value="getInfo"
+                  class="btn btn-primary"
+                  onclick='getInfo(document.getElementById("getInfoKey").value,document.getElementById("getInfoValue").value)'>
+            getInfo
+          </button>
+        </div>
       </div>
-    </div>
-  </li>
+    </li>
 
-  <li class="list-group-item">
-    <div class="input-group">
-      <input type="text" class="form-control" placeholder="code" id="code">
-      <input type="text" class="form-control" placeholder="msg" id="msg">
-    </div>
-    <div class="input-group">
-      <input type="number" class="form-control" placeholder="amount" id="amount">
-      <input type="text" class="form-control" placeholder="currency" id="currency">
-      <input type="text" class="form-control" placeholder="orderId" id="orderId">
-      <input type="text" class="form-control" placeholder="passBack" id="passBack">
-    </div>
-    <button type="button" id="sendPayCallbackButton"
-            value="sendPayCallback"
-            class="btn btn-primary"
-            onclick='sendPayCallback(
+    <li class="list-group-item">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="code" id="code">
+        <input type="text" class="form-control" placeholder="msg" id="msg">
+      </div>
+      <div class="input-group">
+        <input type="number" class="form-control" placeholder="amount" id="amount">
+        <input type="text" class="form-control" placeholder="currency" id="currency">
+        <input type="text" class="form-control" placeholder="orderId" id="orderId">
+        <input type="text" class="form-control" placeholder="passBack" id="passBack">
+      </div>
+      <button type="button" id="sendPayCallbackButton"
+              value="sendPayCallback"
+              class="btn btn-primary"
+              onclick='sendPayCallback(
 				document.getElementById("code").value,
 				document.getElementById("msg").value,
 				document.getElementById("amount").value,
-				document.getElementById("currency").value),
-				document.getElementById("orderId").value),
+				document.getElementById("currency").value,
+				document.getElementById("orderId").value,
 				document.getElementById("passBack").value)'>
-      sendPayCallback
-    </button>
-  </li>
+        sendPayCallback
+      </button>
+    </li>
+  </ul>
   <div class="fixed-bottom" id="bottomBar"></div>
 </div>
 
@@ -207,12 +207,12 @@
 	            'params': {
 	                'code': code,
 	                'msg': msg,
-					'data': {
-						'amount': amount,
-						'currency': currency,
-						'orderId': orderId,
-						'passBack': passBack
-					}
+                  'data': {
+                    'amount': amount,
+                    'currency': currency,
+                    'orderId': orderId,
+                    'passBack': passBack
+                  }
 	            }
 	        }
 	        , function (responseData) {
@@ -335,5 +335,7 @@
     $(document).on('WebViewJavascriptBridgeReady', function () {
        $('#navBar').text('Hello, welcome to Tec-Pay demo');
     });
+
+
 </script>
 </html>
