@@ -10,4 +10,7 @@ import com.tec.pay.android.base.frame.MvpView;
  */
 public interface ITabView extends MvpView {
 
+  void startProgressBar();
+
+  void finishProgressBar();
 }

@@ -62,6 +62,7 @@ public class TecPayActivity extends Activity implements ITecPayView {
       return;
     }
     mHybridTabView = findViewById(R.id.pay_web);
+
     mHybridTabView.attachParentPresenter(mPresenter);
     mHybridTabView.loadUri(mUrl);
     findViewById(R.id.pay_close).setOnClickListener(view -> {

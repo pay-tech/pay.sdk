@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="TecProgressBar">
+    <attr format="integer" name="tec_progress" />
+    <attr format="integer" name="tec_max" />
+    <attr format="integer" name="tec_progressHeight" />
+    <attr format="color" name="tec_progressColor" />
+  </declare-styleable>
+</resources>

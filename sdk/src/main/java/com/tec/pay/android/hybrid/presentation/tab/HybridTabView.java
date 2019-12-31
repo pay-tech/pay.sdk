@@ -4,8 +4,12 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
+import com.tec.pay.android.base.utils.ConvertUtils;
+import com.tec.pay.android.base.utils.LayoutHelper;
 import com.tec.pay.android.base.utils.NetUtils;
+import com.tec.pay.android.base.wediget.TecProgressBar;
 import com.tec.pay.android.hybrid.IHybridClient;
 import com.tec.pay.android.hybrid.IHybridFactory;
 import com.tec.pay.android.hybrid.IHybridObserver;
@@ -27,6 +31,7 @@ public class HybridTabView extends FrameLayout implements ITabView {
 
   private HybridWebView mHybridWebView;
   private HybridWebPresenter mPresenter;
+  private TecProgressBar mProgressBar;
 
   public HybridTabView(@NonNull Context context) {
     this(context, null);
@@ -65,6 +70,10 @@ public class HybridTabView extends FrameLayout implements ITabView {
       }
     });
     addView(mHybridWebView, 0);
+    mProgressBar = new TecProgressBar(context);
+    mProgressBar.setMax(100);
+    addView(mProgressBar, 1,
+        LayoutHelper.createFL(LayoutHelper.MATCH, ConvertUtils.dp2px(context, 2)));
   }
 
   public void attachParentPresenter(TecPayPresenter presenter) {
@@ -105,5 +114,23 @@ public class HybridTabView extends FrameLayout implements ITabView {
 
   public boolean goBack() {
     return mHybridWebView.goBack(ERROR_URL);
+  }
+
+  @Override
+  public void startProgressBar() {
+    if (mProgressBar == null) {
+      return;
+    }
+    mProgressBar.setVisibility(View.VISIBLE);
+    mProgressBar.setCurProgress(100, 6000, null);
+  }
+
+  @Override
+  public void finishProgressBar() {
+    if (mProgressBar == null) {
+      return;
+    }
+    mProgressBar.setNormalProgress(100);
+    mProgressBar.setVisibility(View.INVISIBLE);
   }
 }

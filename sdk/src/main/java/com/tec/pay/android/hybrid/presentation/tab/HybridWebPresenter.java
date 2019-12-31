@@ -170,12 +170,12 @@ public class HybridWebPresenter extends MvpBasePresenter<ITabView> implements IH
 
   @Override
   public void onLoadStarted(HybridWebView view) {
-
+    ifViewAttached(ITabView::startProgressBar);
   }
 
   @Override
   public void onLoadFinished(HybridWebView view) {
-
+    ifViewAttached(ITabView::finishProgressBar);
   }
 
   @Override
