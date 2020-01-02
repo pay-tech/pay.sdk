@@ -3,6 +3,7 @@ package com.tec.pay.android;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.tec.pay.android.base.data.BaseConstant;
+import com.tec.pay.android.base.utils.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -75,8 +76,10 @@ public class TecPayResult {
       if (jsonObject == null) {
         return null;
       }
-      return new Data(jsonObject.getDouble("amount"), jsonObject.getString("currency"),
-          jsonObject.getString("orderId")).setPassBack(jsonObject.optString("passBack"));
+      return new Data(jsonObject.getDouble("amount"),
+          JsonUtils.getStringNonEmpty(jsonObject, "currency"),
+          JsonUtils.getStringNonEmpty(jsonObject, "orderId"))
+          .setPassBack(jsonObject.optString("passBack"));
     }
 
     public Data setPassBack(String passBack) {

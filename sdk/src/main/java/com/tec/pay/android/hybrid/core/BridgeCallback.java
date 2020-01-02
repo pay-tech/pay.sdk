@@ -1,11 +1,11 @@
 package com.tec.pay.android.hybrid.core;
 
 import android.support.annotation.NonNull;
+import com.tec.pay.android.base.exception.JSONParseException;
 import com.tec.pay.android.base.log.DLog;
 import com.tec.pay.android.base.utils.JsonUtils;
 import com.tec.pay.android.hybrid.IHybridClient;
 import com.tec.pay.android.hybrid.JsProtocolFactory;
-import com.tec.pay.android.hybrid.model.Code;
 import java.util.Collections;
 import java.util.Map;
 import org.json.JSONException;
@@ -34,47 +34,26 @@ public class BridgeCallback {
   }
 
   public void onSuccess(@NonNull Map<String, Object> data) {
-    Code code;
     try {
       String json = JsProtocolFactory.responseSuccess(JsonUtils.toJSONObject(data));
       callBack.onCallBack(json);
-      code = Code.SUCCESS;
-    } catch (JSONException e) {
-      code = Code.ERROR_JSON_PARSE;
-      DLog.e(e);
     } catch (Throwable e) {
-      code = Code.ERROR_UNKNOWN;
       DLog.e(e);
     }
-    if (code.isSuccessful()) {
-      return;
-    }
-    mClient.onLoadError(mParent, code.getCode(), code.getMsg(), "");
   }
 
-  public void onError(Code errorCode) {
-    onError(null, errorCode);
-  }
-
-  public void onError(Throwable e, Code errorCode) {
-    Code code;
+  public void onError(Throwable e) {
     try {
-      if (e == null) {
-        callBack.onCallBack(JsProtocolFactory.responseError(errorCode));
+      final Throwable throwable;
+      if (e instanceof JSONException) {
+        throwable = new JSONParseException((JSONException) e);
       } else {
-        callBack.onCallBack(JsProtocolFactory.responseError(e, errorCode));
+        throwable = e;
       }
-      code = Code.SUCCESS;
-    } catch (JSONException e2) {
-      code = Code.ERROR_JSON_PARSE;
-      DLog.e(e2);
+      callBack.onCallBack(JsProtocolFactory.responseError(throwable));
+      DLog.w(e.toString());
     } catch (Throwable e2) {
-      code = Code.ERROR_UNKNOWN;
       DLog.e(e2);
     }
-    if (code.isSuccessful()) {
-      return;
-    }
-    mClient.onLoadError(mParent, code.getCode(), code.getMsg(), "");
   }
 }

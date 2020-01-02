@@ -1,6 +1,7 @@
 package com.tec.pay.android.hybrid.model;
 
 import android.support.annotation.NonNull;
+import com.tec.pay.android.base.utils.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,6 +25,6 @@ public class SetTitleRequest {
   }
 
   public static SetTitleRequest from(@NonNull JSONObject jsonObject) throws JSONException {
-    return new SetTitleRequest(jsonObject.getString("title"));
+    return new SetTitleRequest(JsonUtils.getStringNonEmpty(jsonObject, "title"));
   }
 }

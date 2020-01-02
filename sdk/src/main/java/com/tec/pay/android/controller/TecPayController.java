@@ -120,7 +120,8 @@ public class TecPayController {
     mTecPayCallback = result;
 
     try {
-      Uri.Builder uriBuilder = Uri.parse("file:///android_asset/demo.html").buildUpon();
+      Uri.Builder uriBuilder = Uri.parse("http://192.168.166.23:8080").buildUpon();
+//      Uri.Builder uriBuilder = Uri.parse("file:///android_asset/demo.html").buildUpon();
       uriBuilder.appendQueryParameter("appId", mAppId).appendQueryParameter("appKey", mAppKey);
       params.handelUrl(uriBuilder);
       HybridController.instance().showWeb(uriBuilder.toString());

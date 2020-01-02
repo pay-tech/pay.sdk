@@ -32,4 +32,16 @@ public class JsonUtils {
   public static JSONObject toJSONObject(@NonNull Map<String, Object> map) {
     return new JSONObject(map);
   }
+
+  public static String getStringNonEmpty(@NonNull JSONObject jsonObject, String key)
+      throws JSONException {
+    String value;
+    try {
+      value = jsonObject.getString(key);
+      Validator.notEmpty(value, key);
+    } catch (Exception e) {
+      throw new JSONException("Empty value for " + key);
+    }
+    return value;
+  }
 }

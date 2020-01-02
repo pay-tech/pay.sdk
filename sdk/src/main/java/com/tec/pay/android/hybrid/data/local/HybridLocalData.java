@@ -3,7 +3,10 @@ package com.tec.pay.android.hybrid.data.local;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import com.tec.pay.android.base.data.BaseConstant;
 import com.tec.pay.android.base.data.Pref;
+import com.tec.pay.android.base.exception.TecException;
 import com.tec.pay.android.hybrid.data.IHybridDataSource;
 import com.tec.pay.android.hybrid.model.GetResponse;
 import com.tec.pay.android.task.Task;
@@ -44,7 +47,14 @@ public class HybridLocalData implements IHybridDataSource {
 
   @Override
   public Task<GetResponse> getCache(@NonNull String key, @Nullable String defaultValue) {
-    return Task.call(() -> new GetResponse(key, mPayCache.getString(key, defaultValue)));
+    return Task.call(() -> {
+      String value = mPayCache.getString(key, defaultValue);
+      if (TextUtils.isEmpty(value)) {
+        throw new TecException(String.format(BaseConstant.MSG_ERROR_ACTION_GET_NULL, key),
+            BaseConstant.CODE_ERROR_ACTION_GET_NULL);
+      }
+      return new GetResponse(key, value);
+    });
   }
 
   @Override
@@ -68,10 +78,14 @@ public class HybridLocalData implements IHybridDataSource {
     return Task.call(() -> {
       String value;
       Object o = mInfoData.get(key);
-      if (o == null) {
-        value = defaultValue;
-      } else {
+      if (o != null) {
         value = o.toString();
+      } else {
+        value = defaultValue;
+      }
+      if (TextUtils.isEmpty(value)) {
+        throw new TecException(String.format(BaseConstant.MSG_ERROR_ACTION_GET_NULL, key),
+            BaseConstant.CODE_ERROR_ACTION_GET_NULL);
       }
       return new GetResponse(key, value);
     });

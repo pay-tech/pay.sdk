@@ -1,6 +1,7 @@
 package com.tec.pay.android.hybrid.model;
 
 import android.support.annotation.NonNull;
+import com.tec.pay.android.base.utils.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,7 +25,7 @@ public class SetCacheRequest extends SetRequest {
   }
 
   public static SetCacheRequest from(@NonNull JSONObject jsonObject) throws JSONException {
-    return new SetCacheRequest(jsonObject.getString("key"),
-        jsonObject.getString("value"), jsonObject.optLong("expiredTime", -1));
+    return new SetCacheRequest(JsonUtils.getStringNonEmpty(jsonObject, "key"),
+        JsonUtils.getStringNonEmpty(jsonObject, "value"), jsonObject.optLong("expiredTime", -1));
   }
 }

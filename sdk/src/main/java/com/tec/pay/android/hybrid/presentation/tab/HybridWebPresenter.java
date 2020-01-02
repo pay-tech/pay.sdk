@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 import android.webkit.WebResourceResponse;
 import com.tec.pay.android.base.frame.MvpBasePresenter;
 import com.tec.pay.android.base.log.DLog;
+import com.tec.pay.android.base.utils.JsonUtils;
 import com.tec.pay.android.base.utils.Validator;
+import com.tec.pay.android.hybrid.HybridActionException;
 import com.tec.pay.android.hybrid.HybridConstant;
 import com.tec.pay.android.hybrid.IHybridClient;
 import com.tec.pay.android.hybrid.IHybridObserver;
@@ -13,7 +15,6 @@ import com.tec.pay.android.hybrid.IHybridRouter;
 import com.tec.pay.android.hybrid.core.BridgeCallback;
 import com.tec.pay.android.hybrid.core.HybridWebView;
 import com.tec.pay.android.hybrid.data.HybridDataManager;
-import com.tec.pay.android.hybrid.model.Code;
 import com.tec.pay.android.hybrid.model.GetRequest;
 import com.tec.pay.android.hybrid.model.GetResponse;
 import com.tec.pay.android.hybrid.model.RequestBody;
@@ -55,16 +56,17 @@ public class HybridWebPresenter extends MvpBasePresenter<ITabView> implements IH
     switch (requestBody.getAction()) {
       case HybridConstant.ACTION_GET:
         Task.forResult(requestBody.getParams()).continueWith(task -> {
+
           JSONObject params = task.getResult();
           Validator.notNull(params, "params");
           return GetRequest.from(params);
         }, Task.BACKGROUND_EXECUTOR).onSuccessTask(task -> {
+
           GetRequest result = task.getResult();
           return mHybridDataManager.getCache(result.getKey(), result.getDefValue());
         }).continueWith(task -> {
           if (task.isFaulted()) {
-            Exception error = task.getError();
-            function.onError(error, Code.ERROR_DEVELOPER);
+            function.onError(task.getError());
           } else {
             GetResponse result = task.getResult();
             function.onSuccess(Collections.singletonMap(result.key, result.value));
@@ -75,17 +77,19 @@ public class HybridWebPresenter extends MvpBasePresenter<ITabView> implements IH
         break;
       case HybridConstant.ACTION_SET:
         Task.forResult(requestBody.getParams()).continueWith(task -> {
+
           JSONObject params = task.getResult();
           Validator.notNull(params, "params");
           return SetCacheRequest.from(params);
         }, Task.BACKGROUND_EXECUTOR).onSuccessTask(task -> {
+
           SetCacheRequest result = task.getResult();
           return mHybridDataManager
               .setCache(result.getKey(), result.getValue(), result.getExpiredTime());
         }).continueWith(task -> {
+
           if (task.isFaulted()) {
-            Exception error = task.getError();
-            function.onError(error, Code.ERROR_DEVELOPER);
+            function.onError(task.getError());
           } else {
             function.onSuccess();
           }
@@ -94,9 +98,10 @@ public class HybridWebPresenter extends MvpBasePresenter<ITabView> implements IH
         break;
       case HybridConstant.ACTION_FLUSH:
         Task.callInBackground(() -> mHybridDataManager.flushCache()).continueWith(task -> {
+
           if (task.isFaulted()) {
-            Exception error = task.getError();
-            function.onError(error, Code.ERROR_DEVELOPER);
+
+            function.onError(task.getError());
           } else {
             function.onSuccess();
           }
@@ -105,15 +110,18 @@ public class HybridWebPresenter extends MvpBasePresenter<ITabView> implements IH
         break;
       case HybridConstant.ACTION_DEL:
         Task.forResult(requestBody.getParams()).continueWith(task -> {
+
           JSONObject params = task.getResult();
           Validator.notNull(params, "params");
-          return params.getString("key");
+          return JsonUtils.getStringNonEmpty(params, "key");
         }, Task.BACKGROUND_EXECUTOR).onSuccessTask(task -> {
+
           return mHybridDataManager.delCache(task.getResult());
         }).continueWith(task -> {
+
           if (task.isFaulted()) {
-            Exception error = task.getError();
-            function.onError(error, Code.ERROR_DEVELOPER);
+
+            function.onError(task.getError());
           } else {
             function.onSuccess();
           }
@@ -121,7 +129,7 @@ public class HybridWebPresenter extends MvpBasePresenter<ITabView> implements IH
         }, Task.UI_THREAD_EXECUTOR);
         break;
       default:
-        function.onError(Code.ERROR_ACTION_NOT_BE_SUPPORT);
+        function.onError(new HybridActionException());
     }
   }
 
@@ -138,8 +146,8 @@ public class HybridWebPresenter extends MvpBasePresenter<ITabView> implements IH
           return mHybridDataManager.getInfo(result.getKey(), result.getDefValue());
         }).continueWith(task -> {
           if (task.isFaulted()) {
-            Exception error = task.getError();
-            function.onError(error, Code.ERROR_DEVELOPER);
+
+            function.onError(task.getError());
           } else {
             GetResponse result = task.getResult();
             function.onSuccess(Collections.singletonMap(result.key, result.value));
@@ -148,7 +156,7 @@ public class HybridWebPresenter extends MvpBasePresenter<ITabView> implements IH
         }, Task.UI_THREAD_EXECUTOR);
         break;
       default:
-        function.onError(Code.ERROR_ACTION_NOT_BE_SUPPORT);
+        function.onError(new HybridActionException());
     }
   }
 
@@ -218,13 +226,13 @@ public class HybridWebPresenter extends MvpBasePresenter<ITabView> implements IH
       BridgeCallback function) {
     mParent.handleMessage(view, requestBody).continueWith(task -> {
       if (task.isFaulted()) {
-        Exception error = task.getError();
-        function.onError(error, Code.ERROR_DEVELOPER);
+
+        function.onError(task.getError());
       } else {
         if (task.getResult()) {
           function.onSuccess();
         } else {
-          function.onError(Code.ERROR_ACTION_NOT_BE_SUPPORT);
+          function.onError(new HybridActionException());
         }
       }
       return null;

@@ -1,6 +1,7 @@
 package com.tec.pay.android.hybrid.model;
 
 import android.support.annotation.NonNull;
+import com.tec.pay.android.base.utils.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,6 +33,7 @@ public class SetRequest {
 
 
   public static SetRequest from(@NonNull JSONObject jsonObject) throws JSONException {
-    return new SetRequest(jsonObject.getString("key"), jsonObject.getString("value"));
+    return new SetRequest(JsonUtils.getStringNonEmpty(jsonObject, "key"),
+        JsonUtils.getStringNonEmpty(jsonObject, "value"));
   }
 }

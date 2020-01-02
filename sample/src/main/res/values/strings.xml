@@ -1,5 +1,5 @@
 <resources>
   <string name="app_name">TecPay</string>
-  <string name="button_name">Java调用Web</string>
+  <string name="button_name">Start</string>
 
 </resources>

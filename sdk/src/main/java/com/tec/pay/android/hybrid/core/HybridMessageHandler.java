@@ -3,9 +3,9 @@ package com.tec.pay.android.hybrid.core;
 import android.support.annotation.NonNull;
 import com.tec.pay.android.base.log.DLog;
 import com.tec.pay.android.hybrid.HybridConstant;
+import com.tec.pay.android.hybrid.HybridServiceException;
 import com.tec.pay.android.hybrid.IHybridClient;
 import com.tec.pay.android.hybrid.IHybridObserver;
-import com.tec.pay.android.hybrid.model.Code;
 import com.tec.pay.android.hybrid.model.RequestBody;
 import org.json.JSONException;
 
@@ -40,11 +40,12 @@ public class HybridMessageHandler implements BridgeHandler {
   public void handler(String data, CallBackFunction function) {
     BridgeCallback bridgeCallback = new BridgeCallback(mParent, mClient, function);
     try {
-      onBridgeMessage(mParent, data, bridgeCallback);
-    } catch (JSONException e) {
-      bridgeCallback.onError(e, Code.ERROR_JSON_PARSE);
+      boolean handled = onBridgeMessage(mParent, data, bridgeCallback);
+      if (!handled) {
+        bridgeCallback.onError(new HybridServiceException());
+      }
     } catch (Throwable e) {
-      bridgeCallback.onError(e, Code.ERROR_UNKNOWN);
+      bridgeCallback.onError(e);
     }
   }
 

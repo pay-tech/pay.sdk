@@ -2,6 +2,7 @@ package com.tec.pay.android.hybrid.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.tec.pay.android.base.utils.JsonUtils;
 import com.tec.pay.android.base.utils.ObjectUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +43,8 @@ public class ResponseBody {
   }
 
   public static ResponseBody from(@NonNull JSONObject jsonObject) throws JSONException {
-    return new ResponseBody(jsonObject.getInt("code"), jsonObject.getString("msg"),
+    return new ResponseBody(jsonObject.getInt("code"),
+        JsonUtils.getStringNonEmpty(jsonObject, "msg"),
         jsonObject.optJSONObject("data"));
   }
 

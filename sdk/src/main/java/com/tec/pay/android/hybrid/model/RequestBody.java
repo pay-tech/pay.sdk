@@ -2,6 +2,7 @@ package com.tec.pay.android.hybrid.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.tec.pay.android.base.utils.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,7 +35,8 @@ public class RequestBody {
 
   public static RequestBody from(String json) throws JSONException {
     JSONObject jsonObject = new JSONObject(json);
-    return new RequestBody(jsonObject.getString("service"), jsonObject.getString("action"),
+    return new RequestBody(JsonUtils.getStringNonEmpty(jsonObject, "service"),
+        JsonUtils.getStringNonEmpty(jsonObject, "action"),
         jsonObject.optJSONObject("params"));
   }
 }
