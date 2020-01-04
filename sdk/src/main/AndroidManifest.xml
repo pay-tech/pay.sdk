@@ -6,7 +6,7 @@
   <application>
     <activity
       android:name=".hybrid.presentation.main.TecPayActivity"
-      android:launchMode="singleInstance"
+      android:launchMode="singleTask"
       android:screenOrientation="portrait"
       android:theme="@style/TecTheme.Dialog" />
   </application>

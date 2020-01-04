@@ -2,6 +2,7 @@ package com.tec.pay.android.hybrid.data.local;
 
 import android.os.Build;
 import com.tec.pay.android.base.utils.AppUtil;
+import com.tec.pay.android.base.utils.DateUtils;
 import com.tec.pay.android.base.utils.DeviceUtil;
 import com.tec.pay.android.base.utils.IdentityUtil;
 import com.tec.pay.android.base.utils.PhoneUtil;
@@ -25,7 +26,7 @@ public class DeviceData {
     map.put("os", "android");
     map.put("osVer", DeviceUtil.osVersion());
     map.put("lang", DeviceUtil.lang());
-    map.put("timezone", DeviceUtil.timezoneUTC());
+    map.put("timezone", DateUtils.getUTCTimeZone());
     map.put("browserKernel", DeviceUtil.browserKernel());
     map.put("browserKernelVer", DeviceUtil.browserKernelVersion());
     map.put("isRooted", DeviceUtil.isDeviceRooted());

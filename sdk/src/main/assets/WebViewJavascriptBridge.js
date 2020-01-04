@@ -17,6 +17,7 @@
 
     var responseCallbacks = {};
     var uniqueId = 1;
+    var isInit = false;
 
     // 创建消息index队列iframe
     function _createQueueReadyIframe(doc) {
@@ -32,12 +33,21 @@
     }
     //set default messageHandler  初始化默认的消息线程
     function init(messageHandler) {
+        if (isInit) {
+            console.warn("Bridge is inited, ignore the init action.");
+            return;
+        }
+        isInit = true;
+        
         if (WebViewJavascriptBridge._messageHandler) {
             throw new Error('WebViewJavascriptBridge.init called twice');
         }
         WebViewJavascriptBridge._messageHandler = messageHandler;
         var receivedMessages = receiveMessageQueue;
         receiveMessageQueue = null;
+        if (receivedMessages == null) {
+            return;
+        }
         for (var i = 0; i < receivedMessages.length; i++) {
             _dispatchMessageFromNative(receivedMessages[i]);
         }

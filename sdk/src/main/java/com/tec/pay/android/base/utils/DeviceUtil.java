@@ -25,7 +25,6 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Locale;
-import java.util.TimeZone;
 
 public final class DeviceUtil {
 
@@ -444,14 +443,6 @@ public final class DeviceUtil {
     int width = displayMetrics.widthPixels;
     int height = displayMetrics.heightPixels;
     return width + "*" + height;
-  }
-
-  public static String timezoneUTC() {
-    try {
-      return TimeZone.getTimeZone("UTC").getDisplayName();
-    } catch (Exception e) {
-      return TextHelper.EMPTY;
-    }
   }
 
   public static String browserKernel() {

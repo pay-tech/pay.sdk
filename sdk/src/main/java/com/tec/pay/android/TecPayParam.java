@@ -36,6 +36,40 @@ public class TecPayParam {
     uid = builder.uid;
   }
 
+  public double getAmount() {
+    return amount;
+  }
+
+  @NonNull
+  public String getCurrency() {
+    return currency;
+  }
+
+  @Nullable
+  public String getMethodId() {
+    return methodId;
+  }
+
+  @NonNull
+  public String getOrderId() {
+    return orderId;
+  }
+
+  @Nullable
+  public String getPassBack() {
+    return passBack;
+  }
+
+  @NonNull
+  public String getGoods() {
+    return goods;
+  }
+
+  @NonNull
+  public String getUid() {
+    return uid;
+  }
+
   public Uri.Builder handelUrl(Uri.Builder builder) {
     return builder.appendQueryParameter("amount", String.valueOf(amount))
         .appendQueryParameter("currency", currency)

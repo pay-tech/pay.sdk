@@ -3,6 +3,7 @@ package com.tec.pay.android.controller;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import com.tec.pay.android.BuildConfig;
 import com.tec.pay.android.TecPayCallback;
 import com.tec.pay.android.TecPayParam;
@@ -120,8 +121,11 @@ public class TecPayController {
     mTecPayCallback = result;
 
     try {
-      Uri.Builder uriBuilder = Uri.parse("http://192.168.166.23:8080").buildUpon();
-//      Uri.Builder uriBuilder = Uri.parse("file:///android_asset/demo.html").buildUpon();
+      String url = params.getPassBack();
+      if (TextUtils.isEmpty(url)) {
+        url = "file:///android_asset/demo.html";
+      }
+      Uri.Builder uriBuilder = Uri.parse(url).buildUpon();
       uriBuilder.appendQueryParameter("appId", mAppId).appendQueryParameter("appKey", mAppKey);
       params.handelUrl(uriBuilder);
       HybridController.instance().showWeb(uriBuilder.toString());

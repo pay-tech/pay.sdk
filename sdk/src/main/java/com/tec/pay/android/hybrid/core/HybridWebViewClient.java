@@ -17,8 +17,6 @@ import java.util.Map;
 @SuppressWarnings("deprecation")
 class HybridWebViewClient extends BridgeWebViewClient {
 
-  public static final String TAG = HybridWebViewClient.class.getSimpleName();
-
   private final HybridWebViewCore mParent;
 
   HybridWebViewClient(HybridWebViewCore parent) {
@@ -49,7 +47,7 @@ class HybridWebViewClient extends BridgeWebViewClient {
   @Override
   public void onPageStarted(WebView view, String url, Bitmap favicon) {
     super.onPageStarted(view, url, favicon);
-    DLog.d(TAG, "onPageStarted [%s]", url);
+    DLog.d("onPageStarted [%s]", url);
     mParent.switchState(HybridWebViewCore.STATE_LOADING_STARTED);
     mParent.updateCurrentUrl(url);
   }
@@ -58,10 +56,10 @@ class HybridWebViewClient extends BridgeWebViewClient {
   @Override
   public void onPageFinished(WebView view, String url) {
     super.onPageFinished(view, url);
-    DLog.d(TAG, "onPageFinished [%s]", url);
+    DLog.d("onPageFinished [%s]", url);
     final String currentUrl = mParent.currentUrl();
     if (!TextUtils.equals(currentUrl, url)) {
-      DLog.w(TAG, "mismatch url between [%s] and [%s] in onPageFinished", currentUrl, url);
+      DLog.w("mismatch url between [%s] and [%s] in onPageFinished", currentUrl, url);
       mParent.updateCurrentUrl(url);
     }
 
@@ -80,7 +78,7 @@ class HybridWebViewClient extends BridgeWebViewClient {
     if (!mParent.isBind()) {
       return;
     }
-    DLog.v(TAG, "onLoadError[%d][%s][%s][%s][%s]", errorCode, description, failingUrl,
+    DLog.v("onLoadError[%d][%s][%s][%s][%s]", errorCode, description, failingUrl,
         mParent.originUrl(), mParent.currentUrl());
     try {
       URL origin = new URL(mParent.currentUrl());

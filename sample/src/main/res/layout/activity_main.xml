@@ -11,10 +11,9 @@
     android:text="@string/button_name"
     android:layout_height="48dp" />
 
-  <!-- webview 演示web调用Java -->
-  <com.tec.pay.android.hybrid.core.BridgeWebView
-    android:id="@+id/webView"
+  <Spinner
+    android:id="@+id/sp_urls"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"></com.tec.pay.android.hybrid.core.BridgeWebView>
+    android:layout_height="wrap_content" />
 
 </LinearLayout>

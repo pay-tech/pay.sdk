@@ -81,6 +81,9 @@ public class HybridLocalData implements IHybridDataSource {
       if (o != null) {
         value = o.toString();
       } else {
+        value = null;
+      }
+      if (TextUtils.isEmpty(value)) {
         value = defaultValue;
       }
       if (TextUtils.isEmpty(value)) {
