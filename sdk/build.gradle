@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.kezong.fat-aar'
+apply from: "$projectDir/script/dist.gradle"
 
 android {
     compileSdkVersion versions.androidTargetSdkVersion
@@ -13,13 +15,27 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
     defaultConfig {
         resourcePrefix "tec_"
+        switch (getProperty('VARIANT').toLowerCase()) {
+            case 'debug':
+                buildConfigField "boolean", "DEBUG_BUILD", "true"
+                buildConfigField "boolean", "OFFICIAL_BUILD", "false"
+                break
+            case 'official':
+                buildConfigField "boolean", "DEBUG_BUILD", "false"
+                buildConfigField "boolean", "OFFICIAL_BUILD", "true"
+                break
+            default:
+                buildConfigField "boolean", "DEBUG_BUILD", "false"
+                buildConfigField "boolean", "OFFICIAL_BUILD", "false"
+                break
+        }
     }
 
     compileOptions {
@@ -30,6 +46,6 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation libraries.android_support_v4
-    implementation files('libs/utdid4all.jar')
+    compileOnly libraries.android_support_annotations
+    embed files('libs/utdid4all.jar')
 }

@@ -70,7 +70,7 @@ public class TecPayController {
     switchState(STATE_RUNNING);
     ContextManager.init(context);
     BaseHandler.open();
-    if (BuildConfig.DEBUG) {
+    if (!BuildConfig.OFFICIAL_BUILD) {
       DLog.plant(new DebugTree());
     }
     mAppId = appId;

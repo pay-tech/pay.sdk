@@ -31,6 +31,7 @@ public class MainActivity extends Activity implements OnClickListener {
     List<String> list = new ArrayList<>();
     list.add("http://tecpay-web.s3-website-us-east-1.amazonaws.com/");
     list.add("http://192.168.166.23:8080");
+    list.add("");
     ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
         android.R.layout.simple_spinner_item, list);
     dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -44,7 +45,7 @@ public class MainActivity extends Activity implements OnClickListener {
     if (button.equals(v)) {
       TecPay.pay(TecPayParam.newBuilder().passBack((String) spinner.getSelectedItem()).build(),
           result -> {
-        Log.d("PayCallback", new Gson().toJson(result));
+            Log.i("PayCallback", new Gson().toJson(result));
       });
     }
 

@@ -12,20 +12,15 @@ ext.IS_ONLINE_EVN = "official" == VARIANT.toLowerCase()
 ext.SDK_ARTIFACT_ID = "sdk"
 ext.SDK_GROUP_ID = "com.tec.pay"
 
-switch (FLAVOR) {
-    case "tecPay":
-        ext.VERSION_NAME = "0.2.0"
-        ext.VERSION_CODE = 2
-        switch (VARIANT.toLowerCase()) {
-            case "debug":
-                ext.VERSION_NAME = ext.VERSION_NAME + "-${gitShortRev()}-TEST"
-                break
-            case "release":
-                ext.VERSION_NAME = ext.VERSION_NAME + "-${gitShortRev()}-TEST"
-                break
-            case "official":
-                ext.BINTRAY_REPO = ""
-                break
-        }
+ext.VERSION_NAME = "0.3.0"
+ext.VERSION_CODE = 3
+switch (VARIANT.toLowerCase()) {
+    case "debug":
+        ext.VERSION_NAME = ext.VERSION_NAME + "-${gitShortRev()}-SNAPSHOT"
+        break
+    case "release":
+        ext.VERSION_NAME = ext.VERSION_NAME + "-SNAPSHOT"
+        break
+    case "official":
         break
 }

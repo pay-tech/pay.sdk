@@ -1,6 +1,7 @@
 package com.tec.pay.android;
 
 import android.net.Uri;
+import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -10,6 +11,7 @@ import android.support.annotation.Nullable;
  * @author Lucas Cheung.
  * @date 2019-12-31.
  */
+@Keep
 public class TecPayParam {
 
   private final double amount;
@@ -88,6 +90,7 @@ public class TecPayParam {
     return new Builder(tecPayParam);
   }
 
+  @Keep
   public static final class Builder {
 
     private double amount;

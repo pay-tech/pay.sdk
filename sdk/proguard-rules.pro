@@ -1,21 +1,29 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+#---------------------------------   base   ----------------------------------
+-optimizationpasses 5
+-dontusemixedcaseclassnames
+-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+-useuniqueclassmembernames
+-dontpreverify
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
+-keepattributes *Annotation*
+-keepattributes Exceptions
+-keepattributes Signature
+-keepattributes EnclosingMethod
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+#----------------------------------------------------------------------------
+-keeppackagenames com.tec.pay.android.**
+-flattenpackagehierarchy com.tec.pay.android
+-dontwarn InnerClasses
+-dontwarn EnclosingMethod
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+   public *;
+}
+-keep class com.tdshop.android.hybrid.jsbridge.**{*;}
+-keep class * extends com.tdshop.android.hybrid.jsbridge.module.JsModule{*;}
+-keep class com.tdshop.android.hybrid.jsbridge.model.**{*;}
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+-keepclassmembers class * extends android.webkit.WebChromeClient{
+    public void openFileChooser(...);
+}

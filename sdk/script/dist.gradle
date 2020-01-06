@@ -1,0 +1,107 @@
+// dist
+
+apply plugin: 'maven-publish'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+def version_code = VERSION_CODE
+def version_name = VERSION_NAME
+def group_id = SDK_GROUP_ID
+def artifact_id = SDK_ARTIFACT_ID
+
+ext.local = [
+        app_version: "V${version_name}(${version_code})",
+        aar_name   : "${project.name.toUpperCase()}_V${version_name}(${version_code})_${VARIANT}_Build_${global.build_time}.aar",
+        app_flavor : "${camelCase(FLAVOR)}",
+]
+
+def AAR_DIR = "${rootProject.projectDir}/out/aar${!isEmpty(local.app_flavor) ? '/' + local.app_flavor : ''}/${local.app_version}"
+def ORIGIN_AAR_NAME = "${project.name}${!isEmpty(local.app_flavor) ? '-' + local.app_flavor : ''}-release.aar"
+
+task dist(type: Copy) {
+    doFirst {
+        File apkDir = new File(AAR_DIR)
+        apkDir.deleteDir()
+    }
+    from "${buildDir}/outputs/aar/$ORIGIN_AAR_NAME"
+    from "${buildDir}/outputs/mapping${local.app_flavor != null ? '/' + local.app_flavor : ''}/release/mapping.txt"
+    into AAR_DIR
+    rename { String fileName ->
+        fileName.replace("$ORIGIN_AAR_NAME", "${local.aar_name}")
+    }
+}
+
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+publishing {
+    publications {
+        GithubPublication(MavenPublication) {
+            groupId "${group_id}"
+            version "${version_name}"
+            artifact source: "${project.buildDir}/outputs/aar/${ORIGIN_AAR_NAME}"
+            artifact sourcesJar
+            artifactId artifact_id
+            pom.withXml {
+                def root = asNode()
+                def dependencies = root.appendNode('dependencies')
+                configurations.implementation.allDependencies.each {
+                    // Ensure dependencies such as fileTree are not included.
+                    if (it.name != 'unspecified') {
+                        dependencies.append(getDependencyNode('compile', it.group, it.name, it.version))
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+
+            url = uri("https://maven.pkg.github.com/pay-tech/pay.sdk")
+
+            credentials {
+                /**Create github.properties in root project folder file with gpr.usr=GITHUB_USER_ID  & gpr.key=PERSONAL_ACCESS_TOKEN**/
+                username = properties['gpr.usr'] ?: System.getenv("GPR_USER")
+                password = properties['gpr.key'] ?: System.getenv("GPR_API_KEY")
+            }
+        }
+    }
+}
+
+static def isEmpty(String str) {
+    return str == null || str.length() == 0;
+}
+
+static def getDependencyNode(scope, groupId, artifactId, version) {
+    Node node = new Node(null, 'dependency')
+    node.appendNode('groupId', groupId)
+    node.appendNode('artifactId', artifactId)
+    node.appendNode('version', version)
+    node.appendNode('scope', scope)
+    return node
+}
+
+static String camelCase(String self) {
+    if (isEmpty(self)) {
+        return ''
+    }
+    def newName = self.split("_").collect() {
+        it.substring(0, 1).toUpperCase() + it.substring(1, it.length())
+    }.join()
+    newName.substring(0, 1).toLowerCase() + newName.substring(1, newName.length())
+}
+
+afterEvaluate {
+    tasks.withType(PublishToMavenRepository) { task ->
+        if (task.publication.hasProperty('repo') && task.publication.repo != task.repository.name) {
+            task.enabled = false
+            task.group = null
+        }
+    }
+}
+

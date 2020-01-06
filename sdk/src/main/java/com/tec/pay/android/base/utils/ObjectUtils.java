@@ -2,8 +2,6 @@ package com.tec.pay.android.base.utils;
 
 import android.os.Build.VERSION;
 import android.support.annotation.RequiresApi;
-import android.support.v4.util.LongSparseArray;
-import android.support.v4.util.SimpleArrayMap;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.util.SparseIntArray;
@@ -35,8 +33,6 @@ public class ObjectUtils {
       return true;
     } else if (obj instanceof Map && ((Map) obj).isEmpty()) {
       return true;
-    } else if (obj instanceof SimpleArrayMap && ((SimpleArrayMap) obj).isEmpty()) {
-      return true;
     } else if (obj instanceof SparseArray && ((SparseArray) obj).size() == 0) {
       return true;
     } else if (obj instanceof SparseBooleanArray && ((SparseBooleanArray) obj).size() == 0) {
@@ -45,8 +41,6 @@ public class ObjectUtils {
       return true;
     } else if (VERSION.SDK_INT >= 18 && obj instanceof SparseLongArray
         && ((SparseLongArray) obj).size() == 0) {
-      return true;
-    } else if (obj instanceof LongSparseArray && ((LongSparseArray) obj).size() == 0) {
       return true;
     } else {
       return VERSION.SDK_INT >= 16 && obj instanceof android.util.LongSparseArray
@@ -66,10 +60,6 @@ public class ObjectUtils {
     return obj == null || obj.isEmpty();
   }
 
-  public static boolean isEmpty(SimpleArrayMap obj) {
-    return obj == null || obj.isEmpty();
-  }
-
   public static boolean isEmpty(SparseArray obj) {
     return obj == null || obj.size() == 0;
   }
@@ -79,10 +69,6 @@ public class ObjectUtils {
   }
 
   public static boolean isEmpty(SparseIntArray obj) {
-    return obj == null || obj.size() == 0;
-  }
-
-  public static boolean isEmpty(LongSparseArray obj) {
     return obj == null || obj.size() == 0;
   }
 

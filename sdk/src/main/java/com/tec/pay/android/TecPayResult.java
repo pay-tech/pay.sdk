@@ -1,5 +1,6 @@
 package com.tec.pay.android;
 
+import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.tec.pay.android.base.data.BaseConstant;
@@ -13,6 +14,7 @@ import org.json.JSONObject;
  * @author Lucas Cheung.
  * @date 2019-12-31.
  */
+@Keep
 public class TecPayResult {
 
   private final int code;
@@ -59,6 +61,7 @@ public class TecPayResult {
     return data;
   }
 
+  @Keep
   public static class Data {
 
     private final double amount;
