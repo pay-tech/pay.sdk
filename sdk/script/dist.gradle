@@ -103,7 +103,7 @@ install {
         pom {
             project {
                 packaging 'aar'
-                name 'tdshopsdk'
+                name 'tec-pay'
                 url siteUrl
                 // Set your license
                 licenses {
