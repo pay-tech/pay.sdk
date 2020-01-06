@@ -31,11 +31,13 @@
         <div class="input-group">
           <input type="text" class="form-control" placeholder="Key" id="setCacheKey">
           <input type="text" class="form-control" placeholder="Value" id="setCacheValue">
+          <input type="number" class="form-control" placeholder="expiredTime"
+                 id="setCacheExpiredTime">
           <div class="input-group-append">
             <button type="button" id="setCacheButton"
                     value="setCache"
                     class="btn btn-primary"
-                    onclick='setCache(document.getElementById("setCacheKey").value,document.getElementById("setCacheValue").value)'>
+                    onclick='setCache(document.getElementById("setCacheKey").value,document.getElementById("setCacheValue").value, document.getElementById("setCacheExpiredTime").value)'>
               setCache
             </button>
           </div>
@@ -186,11 +188,11 @@
         }
         let template =
             `${title}<strong>${methodName}</strong> @${now.toLocaleTimeString()}<br>
-<pre>${responseData}</pre>
-    <button type="button" class="close" params-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>`;
+                  <p style="color: black;">${responseData}</p>
+                  <button type="button" class="close" params-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>`;
 
         $('#bottomBar').append(template);
     }
@@ -281,14 +283,15 @@
 	}
 
 
-    function setCache(key, value) {
+    function setCache(key, value, expiredTime) {
         window.WebViewJavascriptBridge.send(
             {
                 'service': 'cache',
                 'action': 'set',
                 'params': {
                     'key': key,
-                    'value': value
+                    'value': value,
+                    'expiredTime': expiredTime
                 }
             }
             , function (responseData) {
