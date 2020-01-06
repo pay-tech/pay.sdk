@@ -17,5 +17,5 @@ GRADLE="${GRADLE:-$ROOT_DIR/gradlew}"
  "$GRADLE" :sdk:dist \
            -PVARIANT=Release
 
- "$GRADLE" :sdk:publish \
+ "$GRADLE" :sdk:bintrayUpload \
            -PVARIANT=Release

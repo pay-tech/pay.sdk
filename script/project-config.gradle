@@ -16,11 +16,14 @@ ext.VERSION_NAME = "0.3.0"
 ext.VERSION_CODE = 3
 switch (VARIANT.toLowerCase()) {
     case "debug":
-        ext.VERSION_NAME = ext.VERSION_NAME + "-${gitShortRev()}-SNAPSHOT"
+        ext.VERSION_NAME = ext.VERSION_NAME + "-${gitShortRev()}-DEBUG"
+        ext.BINTRAY_REPO = "test"
         break
     case "release":
-        ext.VERSION_NAME = ext.VERSION_NAME + "-SNAPSHOT"
+        ext.VERSION_NAME = ext.VERSION_NAME + "-${ext.VERSION_CODE}" +"-TEST"
+        ext.BINTRAY_REPO = "test"
         break
     case "official":
+        ext.BINTRAY_REPO = "official"
         break
 }

@@ -1,6 +1,7 @@
 // dist
-
 apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
@@ -40,7 +41,7 @@ task sourcesJar(type: Jar) {
 
 publishing {
     publications {
-        GithubPublication(MavenPublication) {
+        BintrayPublication(MavenPublication) {
             groupId "${group_id}"
             version "${version_name}"
             artifact source: "${project.buildDir}/outputs/aar/${ORIGIN_AAR_NAME}"
@@ -55,19 +56,6 @@ publishing {
                         dependencies.append(getDependencyNode('compile', it.group, it.name, it.version))
                     }
                 }
-            }
-        }
-    }
-    repositories {
-        maven {
-            name = "GitHubPackages"
-
-            url = uri("https://maven.pkg.github.com/pay-tech/pay.sdk")
-
-            credentials {
-                /**Create github.properties in root project folder file with gpr.usr=GITHUB_USER_ID  & gpr.key=PERSONAL_ACCESS_TOKEN**/
-                username = properties['gpr.usr'] ?: System.getenv("GPR_USER")
-                password = properties['gpr.key'] ?: System.getenv("GPR_API_KEY")
             }
         }
     }
@@ -101,6 +89,58 @@ afterEvaluate {
         if (task.publication.hasProperty('repo') && task.publication.repo != task.repository.name) {
             task.enabled = false
             task.group = null
+        }
+    }
+}
+
+def siteUrl = 'https://github.com/pay-tech'
+def gitUrl = 'https://github.com/pay-tech/pay.sdk.git'
+version = version_name
+group = group_id
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                name 'tdshopsdk'
+                url siteUrl
+                // Set your license
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    user = properties["bintray.usr"]
+    key = properties["bintray.key"]
+    configurations = ['archives']
+    publications = ['BintrayPublication']
+    pkg {
+        userOrg = 'pay-tech'
+        publicDownloadNumbers = true
+        repo = BINTRAY_REPO
+        name = "tec-pay"
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+        override = false
+        labels = ['aar', 'android', 'tec-pay']
+        version {
+            name = version_name
+            vcsTag = version_name
         }
     }
 }

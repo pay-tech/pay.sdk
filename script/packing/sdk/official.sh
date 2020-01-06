@@ -19,6 +19,5 @@ GRADLE="${GRADLE:-$ROOT_DIR/gradlew}"
 
  sleep 1s # wait the file being generated
 
- "$GRADLE" :sdk:publish \
-           -PFLAVOR=tdpush \
+ "$GRADLE" :sdk:bintrayUpload \
            -PVARIANT=Official
