@@ -2,6 +2,8 @@ package com.tec.pay.android.hybrid.data;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.tec.pay.android.hybrid.model.GetArrayRequest;
+import com.tec.pay.android.hybrid.model.GetArrayResponse;
 import com.tec.pay.android.hybrid.model.GetResponse;
 import com.tec.pay.android.task.Task;
 
@@ -23,5 +25,5 @@ public interface IHybridDataSource {
 
   Task<Void> flushCache();
 
-  Task<GetResponse> getInfo(@NonNull String key, @Nullable String defaultValue);
+  Task<GetArrayResponse> getInfoList(@NonNull GetArrayRequest request);
 }

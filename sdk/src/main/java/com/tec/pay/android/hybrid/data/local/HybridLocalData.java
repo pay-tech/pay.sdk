@@ -8,6 +8,9 @@ import com.tec.pay.android.base.data.BaseConstant;
 import com.tec.pay.android.base.data.Pref;
 import com.tec.pay.android.base.exception.TecException;
 import com.tec.pay.android.hybrid.data.IHybridDataSource;
+import com.tec.pay.android.hybrid.model.GetArrayRequest;
+import com.tec.pay.android.hybrid.model.GetArrayResponse;
+import com.tec.pay.android.hybrid.model.GetRequest;
 import com.tec.pay.android.hybrid.model.GetResponse;
 import com.tec.pay.android.task.Task;
 import java.util.HashMap;
@@ -74,23 +77,35 @@ public class HybridLocalData implements IHybridDataSource {
   }
 
   @Override
-  public Task<GetResponse> getInfo(@NonNull String key, @Nullable String defaultValue) {
+  public Task<GetArrayResponse> getInfoList(@NonNull GetArrayRequest request) {
     return Task.call(() -> {
-      String value;
-      Object o = mInfoData.get(key);
-      if (o != null) {
-        value = o.toString();
-      } else {
-        value = null;
+      GetArrayResponse response = new GetArrayResponse(
+          new HashMap<>(request.getGetRequestList().size()));
+      for (GetRequest getRequest : request.getGetRequestList()) {
+        GetResponse info = getInfo(getRequest);
+        response.values.put(info.key, info.value);
       }
-      if (TextUtils.isEmpty(value)) {
-        value = defaultValue;
-      }
-      if (TextUtils.isEmpty(value)) {
-        throw new TecException(String.format(BaseConstant.MSG_ERROR_ACTION_GET_NULL, key),
-            BaseConstant.CODE_ERROR_ACTION_GET_NULL);
-      }
-      return new GetResponse(key, value);
+      return response;
     });
+  }
+
+  private GetResponse getInfo(GetRequest getRequest)
+      throws TecException {
+    String value;
+    Object o = mInfoData.get(getRequest.getKey());
+    if (o != null) {
+      value = o.toString();
+    } else {
+      value = null;
+    }
+    if (TextUtils.isEmpty(value)) {
+      value = getRequest.getDefValue();
+    }
+    if (TextUtils.isEmpty(value)) {
+      throw new TecException(
+          String.format(BaseConstant.MSG_ERROR_ACTION_GET_NULL, getRequest.getKey()),
+          BaseConstant.CODE_ERROR_ACTION_GET_NULL);
+    }
+    return new GetResponse(getRequest.getKey(), value);
   }
 }

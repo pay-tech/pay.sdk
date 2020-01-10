@@ -9,9 +9,9 @@ package com.tec.pay.android.hybrid.model;
 public class GetResponse {
 
   public String key;
-  public String value;
+  public Object value;
 
-  public GetResponse(String key, String value) {
+  public GetResponse(String key, Object value) {
     this.key = key;
     this.value = value;
   }

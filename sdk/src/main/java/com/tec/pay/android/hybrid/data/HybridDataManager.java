@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import com.tec.pay.android.base.component.ContextManager;
 import com.tec.pay.android.hybrid.data.local.HybridLocalData;
 import com.tec.pay.android.hybrid.data.local.SdkData;
+import com.tec.pay.android.hybrid.model.GetArrayRequest;
+import com.tec.pay.android.hybrid.model.GetArrayResponse;
 import com.tec.pay.android.hybrid.model.GetResponse;
 import com.tec.pay.android.task.Task;
 
@@ -62,7 +64,7 @@ public class HybridDataManager implements IHybridDataSource {
   }
 
   @Override
-  public Task<GetResponse> getInfo(@NonNull String key, @Nullable String defaultValue) {
-    return mHybridLocalData.getInfo(key, defaultValue);
+  public Task<GetArrayResponse> getInfoList(@NonNull GetArrayRequest request) {
+    return mHybridLocalData.getInfoList(request);
   }
 }

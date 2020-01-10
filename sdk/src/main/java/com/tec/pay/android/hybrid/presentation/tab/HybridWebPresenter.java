@@ -15,6 +15,8 @@ import com.tec.pay.android.hybrid.IHybridRouter;
 import com.tec.pay.android.hybrid.core.BridgeCallback;
 import com.tec.pay.android.hybrid.core.HybridWebView;
 import com.tec.pay.android.hybrid.data.HybridDataManager;
+import com.tec.pay.android.hybrid.model.GetArrayRequest;
+import com.tec.pay.android.hybrid.model.GetArrayResponse;
 import com.tec.pay.android.hybrid.model.GetRequest;
 import com.tec.pay.android.hybrid.model.GetResponse;
 import com.tec.pay.android.hybrid.model.RequestBody;
@@ -140,17 +142,15 @@ public class HybridWebPresenter extends MvpBasePresenter<ITabView> implements IH
         Task.forResult(requestBody.getParams()).continueWith(task -> {
           JSONObject params = task.getResult();
           Validator.notNull(params, "params");
-          return GetRequest.from(params);
-        }, Task.BACKGROUND_EXECUTOR).onSuccessTask(task -> {
-          GetRequest result = task.getResult();
-          return mHybridDataManager.getInfo(result.getKey(), result.getDefValue());
-        }).continueWith(task -> {
+          return GetArrayRequest.from(params);
+        }, Task.BACKGROUND_EXECUTOR).onSuccessTask(task ->
+            mHybridDataManager.getInfoList(task.getResult())).continueWith(task ->
+        {
           if (task.isFaulted()) {
-
             function.onError(task.getError());
           } else {
-            GetResponse result = task.getResult();
-            function.onSuccess(Collections.singletonMap(result.key, result.value));
+            GetArrayResponse result = task.getResult();
+            function.onSuccess(result.values);
           }
           return null;
         }, Task.UI_THREAD_EXECUTOR);

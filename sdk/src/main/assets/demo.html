@@ -115,14 +115,22 @@
         <input type="text" class="form-control" placeholder="Key" id="getInfoKey">
         <input type="text" class="form-control" placeholder="DefaultValue"
                id="getInfoValue">
-        <div class="input-group-append">
-          <button type="button" id="getInfoButton"
-                  value="getInfo"
-                  class="btn btn-primary"
-                  onclick='getInfo(document.getElementById("getInfoKey").value,document.getElementById("getInfoValue").value)'>
-            getInfo
-          </button>
-        </div>
+      </div>
+      <div id="getInfo2" class="input-group">
+        <input type="text" class="form-control" placeholder="Key" id="getInfoKey2" value="1">
+        <input type="text" class="form-control" placeholder="DefaultValue" value="1"
+               id="getInfoValue2">
+      </div>
+      <div class="input-group-append">
+        <button type="button" id="getInfoButton"
+                value="getInfo"
+                class="btn btn-primary"
+                onclick='getInfo(document.getElementById("getInfoKey").value,
+                            document.getElementById("getInfoValue").value,
+                            document.getElementById("getInfoKey2").value,
+                            document.getElementById("getInfoValue2").value)'>
+          getInfo
+        </button>
       </div>
     </li>
 
@@ -223,14 +231,20 @@
 	    );
 	}
 	
-	function getInfo(key, defValue) {
+	function getInfo(key1, defValue1, key2, defValue2) {
 	    window.WebViewJavascriptBridge.send(
 	        {
 	            'service': 'info',
 	            'action': 'get',
 	            'params': {
-	                'key': key,
-	                'defValue': defValue
+	                'keys': [{
+	                  'key': key1,
+	                  'defValue': defValue1
+	                },
+	                {
+	                  'key': key2,
+	                  'defValue': defValue2
+	                }]
 	            }
 	        }
 	        , function (responseData) {
