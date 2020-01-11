@@ -128,10 +128,10 @@ public final class DeviceUtil {
       try {
         return Build.getRadioVersion();
       } catch (Throwable e) {
-        return Build.UNKNOWN;
+        return "";
       }
     }
-    return Build.UNKNOWN;
+    return "";
   }
 
   /**

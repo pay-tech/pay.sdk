@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.tec.pay.android.base.data.BaseConstant;
 import com.tec.pay.android.base.data.Pref;
 import com.tec.pay.android.base.exception.TecException;
+import com.tec.pay.android.base.utils.ObjectUtils;
 import com.tec.pay.android.hybrid.data.IHybridDataSource;
 import com.tec.pay.android.hybrid.model.GetArrayRequest;
 import com.tec.pay.android.hybrid.model.GetArrayResponse;
@@ -89,23 +90,14 @@ public class HybridLocalData implements IHybridDataSource {
     });
   }
 
-  private GetResponse getInfo(GetRequest getRequest)
-      throws TecException {
-    String value;
+  private GetResponse getInfo(GetRequest getRequest) {
     Object o = mInfoData.get(getRequest.getKey());
-    if (o != null) {
-      value = o.toString();
-    } else {
-      value = null;
+    if (!ObjectUtils.isEmpty(o)) {
+      return new GetResponse(getRequest.getKey(), o.toString());
     }
-    if (TextUtils.isEmpty(value)) {
-      value = getRequest.getDefValue();
+    if (!ObjectUtils.isEmpty(getRequest.getDefValue())) {
+      return new GetResponse(getRequest.getKey(), getRequest.getDefValue());
     }
-    if (TextUtils.isEmpty(value)) {
-      throw new TecException(
-          String.format(BaseConstant.MSG_ERROR_ACTION_GET_NULL, getRequest.getKey()),
-          BaseConstant.CODE_ERROR_ACTION_GET_NULL);
-    }
-    return new GetResponse(getRequest.getKey(), value);
+    return new GetResponse(getRequest.getKey(), "");
   }
 }
