@@ -111,10 +111,32 @@
       </div>
     </li>
     <li class="list-group-item">
+      <div class="input-group">
+        <a>getInfo single</a>
+      </div>
       <div id="getInfo" class="input-group">
         <input type="text" class="form-control" placeholder="Key" id="getInfoKey">
         <input type="text" class="form-control" placeholder="DefaultValue"
                id="getInfoValue">
+      </div>
+      <div class="input-group-append">
+        <button type="button" id="getInfoButton"
+                value="getInfo"
+                class="btn btn-primary"
+                onclick='getInfo2(document.getElementById("getInfoKey").value,
+                            document.getElementById("getInfoValue").value)'>
+          getInfo
+        </button>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="input-group">
+        <a>getInfo multiple</a>
+      </div>
+      <div id="getInfo1" class="input-group">
+        <input type="text" class="form-control" placeholder="Key" id="getInfoKey1">
+        <input type="text" class="form-control" placeholder="DefaultValue"
+               id="getInfoValue1">
       </div>
       <div id="getInfo2" class="input-group">
         <input type="text" class="form-control" placeholder="Key" id="getInfoKey2" value="1">
@@ -122,11 +144,11 @@
                id="getInfoValue2">
       </div>
       <div class="input-group-append">
-        <button type="button" id="getInfoButton"
+        <button type="button" id="getInfoButton2"
                 value="getInfo"
                 class="btn btn-primary"
-                onclick='getInfo(document.getElementById("getInfoKey").value,
-                            document.getElementById("getInfoValue").value,
+                onclick='getInfo(document.getElementById("getInfoKey1").value,
+                            document.getElementById("getInfoValue1").value,
                             document.getElementById("getInfoKey2").value,
                             document.getElementById("getInfoValue2").value)'>
           getInfo
@@ -135,6 +157,9 @@
     </li>
 
     <li class="list-group-item">
+      <div class="input-group">
+        <a>With params</a>
+      </div>
       <div class="input-group">
         <input type="text" class="form-control" placeholder="code" id="code">
         <input type="text" class="form-control" placeholder="msg" id="msg">
@@ -148,13 +173,31 @@
       <button type="button" id="sendPayCallbackButton"
               value="sendPayCallback"
               class="btn btn-primary"
-              onclick='sendPayCallback(
+              onclick='sendPayCallback2(
 				document.getElementById("code").value,
 				document.getElementById("msg").value,
 				document.getElementById("amount").value,
 				document.getElementById("currency").value,
 				document.getElementById("orderId").value,
 				document.getElementById("passBack").value)'>
+        sendPayCallback
+      </button>
+    </li>
+
+    <li class="list-group-item">
+      <div class="input-group">
+        <a>Non params</a>
+      </div>
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="code" id="callbackCode">
+        <input type="text" class="form-control" placeholder="msg" id="callbackMsg">
+      </div>
+      <button type="button" id="sendPayCallbackButton2"
+              value="sendPayCallback"
+              class="btn btn-primary"
+              onclick='sendPayCallback(
+				document.getElementById("callbackCode").value,
+				document.getElementById("callbackMsg").value)'>
         sendPayCallback
       </button>
     </li>
@@ -208,8 +251,24 @@
 	$(".fixed-bottom").on("click",".close",function(){
 		$(this).parents(".alert").remove()
 	})
+
+	function sendPayCallback(code, msg) {
+	    window.WebViewJavascriptBridge.send(
+	        {
+	            'service': 'biz',
+	            'action': 'callback',
+	            'params': {
+	                'code': code,
+	                'msg': msg
+	            }
+	        }
+	        , function (responseData) {
+	            appendAlert("sendPayCallback", responseData)
+	        }
+	    );
+	}
 	
-	function sendPayCallback(code, msg, amount, currency, orderId, passBack) {
+	function sendPayCallback2(code, msg, amount, currency, orderId, passBack) {
 	    window.WebViewJavascriptBridge.send(
 	        {
 	            'service': 'biz',
@@ -227,6 +286,24 @@
 	        }
 	        , function (responseData) {
 	            appendAlert("sendPayCallback", responseData)
+	        }
+	    );
+	}
+
+	function getInfo2(key, defValue) {
+	    window.WebViewJavascriptBridge.send(
+	        {
+	            'service': 'info',
+	            'action': 'get',
+	            'params': {
+	                'keys': [{
+	                  'key': key,
+	                  'defValue': defValue
+	                }]
+	            }
+	        }
+	        , function (responseData) {
+	            appendAlert("getInfo", responseData)
 	        }
 	    );
 	}

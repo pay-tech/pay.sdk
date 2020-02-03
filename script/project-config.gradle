@@ -12,8 +12,8 @@ ext.IS_ONLINE_EVN = "official" == VARIANT.toLowerCase()
 ext.SDK_ARTIFACT_ID = "sdk"
 ext.SDK_GROUP_ID = "com.tec.pay"
 
-ext.VERSION_NAME = "0.3.2"
-ext.VERSION_CODE = 5
+ext.VERSION_NAME = "0.3.3"
+ext.VERSION_CODE = 6
 switch (VARIANT.toLowerCase()) {
     case "debug":
         ext.VERSION_NAME = ext.VERSION_NAME + "-${gitShortRev()}-DEBUG"
